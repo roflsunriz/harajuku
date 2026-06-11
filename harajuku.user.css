@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           niconico Harajuku-ish
 @namespace      github.com/roflsunriz/harajuku
-@version        0.3.24
+@version        0.3.26
 @description    Modern nicovideo watch page styled toward the Harajuku-era niconico look.
 @author         roflsunriz
 @match          https://www.nicovideo.jp/watch/*
@@ -63,6 +63,7 @@
   }
 
   #CommonHeader {
+    position: static !important;
     width: 100% !important;
     height: 36px !important;
     min-height: 36px !important;
@@ -71,7 +72,7 @@
   }
 
   #CommonHeader a[href^="https://www.nicovideo.jp?"] {
-    position: fixed !important;
+    position: absolute !important;
     left: calc((100vw - var(--hy-width)) / 2 + 8px) !important;
     top: 48px !important;
     z-index: 30 !important;
