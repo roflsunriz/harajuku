@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           niconico Harajuku-ish
 @namespace      github.com/roflsunriz/harajuku
-@version        0.3.26
+@version        0.3.27
 @description    Modern nicovideo watch page styled toward the Harajuku-era niconico look.
 @author         roflsunriz
 @match          https://www.nicovideo.jp/watch/*
@@ -62,7 +62,7 @@
 
   html,
   body {
-    background: var(--hy-bg) !important;
+    background: transparent !important;
     color: var(--hy-text) !important;
     font-family: "Arial", "Helvetica", "Meiryo", "MS PGothic", sans-serif !important;
     font-size: 12px !important;
@@ -74,7 +74,7 @@
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background: var(--hy-bg) !important;
+    background: transparent !important;
   }
 
   a,
@@ -219,7 +219,7 @@
     height: 56px !important;
     min-height: 56px !important;
     padding: 0 !important;
-    background: #fff !important;
+    background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
     color: var(--hy-text) !important;
@@ -361,7 +361,7 @@
 
   #root main {
     display: block !important;
-    background: var(--hy-bg) !important;
+    background: transparent !important;
     margin-top: 0 !important;
   }
 
@@ -918,6 +918,11 @@
     overflow: hidden !important;
   }
 
+  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type > header [aria-label*="動画の詳細情報"] > * {
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type > header [aria-label*="動画の詳細情報"]::after {
     content: "続きを読む";
     position: absolute;
@@ -1057,7 +1062,7 @@
   :root[data-hy-theme="light"] body,
   :root[data-hy-theme="light"] #root main,
   :root[data-hy-theme="light"] body::before {
-    background: #fff !important;
+    background: transparent !important;
     color: #222 !important;
   }
 
@@ -1065,7 +1070,7 @@
   :root[data-hy-theme="dark"] body,
   :root[data-hy-theme="dark"] #root main,
   :root[data-hy-theme="dark"] body::before {
-    background: #151515 !important;
+    background: transparent !important;
     color: #e8e8e8 !important;
   }
 
@@ -1078,6 +1083,10 @@
     background: #fff !important;
     border-color: #b7b7b7 !important;
     color: #222 !important;
+  }
+
+  :root[data-hy-theme="light"] #root > div > header {
+    background: transparent !important;
   }
 
   :root[data-hy-theme="light"] #root > div > header a[title="ニコニコ動画"]::after {
@@ -1174,7 +1183,7 @@
   :root[data-hy-theme="light"] #root > div > header a:not([title="ニコニコ動画"]),
   :root[data-hy-theme="light"] #root > div > header [class*="bg_layer"],
   :root[data-hy-theme="light"] #root > div > header [class*="bg-c_layer"] {
-    background: #fff !important;
+    background: transparent !important;
     color: #111 !important;
   }
 
@@ -1188,8 +1197,12 @@
     color: #e8e8e8 !important;
   }
 
+  :root[data-hy-theme="dark"] #CommonHeader {
+    background: transparent !important;
+  }
+
   :root[data-hy-theme="dark"] #root > div > header {
-    background: #151515 !important;
+    background: transparent !important;
     color: #e8e8e8 !important;
   }
 
@@ -1251,17 +1264,17 @@
     html,
     body,
     #root main {
-      background: var(--hy-bg) !important;
+      background: transparent !important;
       color: var(--hy-text) !important;
     }
 
     body::before {
-      background: var(--hy-bg) !important;
+      background: transparent !important;
     }
 
     #root > div > header,
     #CommonHeader {
-      background: #151515 !important;
+      background: transparent !important;
       color: var(--hy-text) !important;
     }
 
@@ -1436,5 +1449,76 @@
   :root[data-hy-theme="dark"] button[aria-label="ニコるボタン"][data-element-name="nicoru_click"]:hover {
     background: #252525 !important;
     border-color: #252525 !important;
+  }
+
+  button[data-element-name="tag_edit"] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: normal !important;
+    gap: normal !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    padding: 0 8px !important;
+    margin-top: 4px !important;
+    border: 1px solid #aaa !important;
+    border-radius: var(--hy-radius) !important;
+    background: linear-gradient(#fff, #e7e7e7) !important;
+    color: var(--hy-link) !important;
+    font-size: 12px !important;
+    font-weight: normal !important;
+    line-height: 16.8px !important;
+    flex: 0 0 auto !important;
+    max-width: none !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+  }
+
+  button[data-element-name="tag_edit"] svg {
+    display: none !important;
+  }
+
+  button[data-element-name="tag_edit"] span {
+    display: flow-root !important;
+    height: 16.8px !important;
+    overflow: hidden !important;
+    color: inherit !important;
+    font: inherit !important;
+    line-height: inherit !important;
+    white-space: nowrap !important;
+    text-overflow: clip !important;
+  }
+
+  :root[data-hy-theme="light"] button[data-element-name="tag_edit"] {
+    background: linear-gradient(#fff, #e7e7e7) !important;
+    border-color: #999 !important;
+    color: #0645ad !important;
+  }
+
+  :root[data-hy-theme="light"] #root#root main button[data-element-name="tag_edit"],
+  :root[data-hy-theme="light"] #root#root main button[data-element-name="tag_edit"] span {
+    color: #0645ad !important;
+    fill: #0645ad !important;
+  }
+
+  :root[data-hy-theme="dark"] button[data-element-name="tag_edit"] {
+    background: linear-gradient(#323232, #222) !important;
+    border-color: #5f5f5f !important;
+    color: var(--hy-link) !important;
+  }
+
+  :root[data-hy-theme="dark"] #root#root main button[data-element-name="tag_edit"],
+  :root[data-hy-theme="dark"] #root#root main button[data-element-name="tag_edit"] span {
+    color: var(--hy-link) !important;
+    fill: var(--hy-link) !important;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    button[data-element-name="tag_edit"] {
+      background: linear-gradient(#323232, #222) !important;
+      border-color: #5f5f5f !important;
+      color: var(--hy-link) !important;
+    }
   }
 }
