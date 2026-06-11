@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           niconico Harajuku-ish
 @namespace      github.com/roflsunriz/harajuku
-@version        0.3.23
+@version        0.3.24
 @description    Modern nicovideo watch page styled toward the Harajuku-era niconico look.
 @author         roflsunriz
 @match          https://www.nicovideo.jp/watch/*
@@ -698,7 +698,7 @@
   }
 
   section[class*="grid-template-areas"]::after {
-    content: "動画の詳細情報　■DECO*27です。甘党トリオ feat.ぐみさん";
+    content: "動画の詳細情報";
     position: absolute;
     left: 0;
     top: 38px;
