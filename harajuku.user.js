@@ -208,7 +208,6 @@
         color: #111 !important;
       }
 
-      :root[data-hy-theme="dark"] #root > div > header,
       :root[data-hy-theme="dark"] #CommonHeader,
       :root[data-hy-theme="dark"] section[class*="grid-template-areas"] section,
       :root[data-hy-theme="dark"] section[class*="grid-template-areas"] aside,
@@ -219,10 +218,49 @@
         color: #e8e8e8 !important;
       }
 
+      :root[data-hy-theme="dark"] #root > div > header {
+        background: #151515 !important;
+        color: #e8e8e8 !important;
+      }
+
       :root[data-hy-theme="dark"] section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child h1 {
         background: linear-gradient(#2e2e2e, #202020) !important;
         border-color: #666 !important;
         color: #f2f2f2 !important;
+      }
+
+      :root[data-hy-theme="dark"] #CommonHeader a[href^="https://www.nicovideo.jp?"] {
+        filter: brightness(0) invert(.68) contrast(.95) !important;
+        opacity: .72 !important;
+      }
+
+      :root[data-hy-theme="dark"] #root > div > header a[title="ニコニコ動画"]::after {
+        color: #a8a8a8 !important;
+        text-shadow: 0 -1px 0 #000 !important;
+      }
+
+      :root[data-hy-theme="dark"] #root > div > header form[role="search"] {
+        background: #141414 !important;
+        border-color: #2d2d2d !important;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .85) !important;
+      }
+
+      :root[data-hy-theme="dark"] #root > div > header form[role="search"]::before {
+        background: #191919 !important;
+        border-right-color: #2d2d2d !important;
+        color: #aaa !important;
+        text-shadow: 0 -1px 0 #000 !important;
+      }
+
+      :root[data-hy-theme="dark"] #root > div > header input[role="combobox"] {
+        background: #141414 !important;
+        color: #c8c8c8 !important;
+      }
+
+      :root[data-hy-theme="dark"] #root > div > header form[role="search"] button[aria-label="検索"] {
+        background: #191919 !important;
+        border-left-color: #2d2d2d !important;
+        color: #aaa !important;
       }
     `;
   }
