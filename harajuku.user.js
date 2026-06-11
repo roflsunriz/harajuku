@@ -19,7 +19,7 @@
     sidebarPanel: 'div[class*="grid-area_"][class*="sidebar"] > div > div:first-child',
     bottom: 'section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"]',
     detailList: 'section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type dl',
-    header: "#CommonHeader, #root > div > header",
+    header: "#root > div > header",
   };
 
   const META_ITEMS = [
@@ -45,8 +45,8 @@
     ROOT.style.colorScheme = nextTheme;
     const button = document.querySelector(".HarajukuThemeButton");
     if (button) {
-      button.textContent = nextTheme === "dark" ? "Light" : "Dark";
       button.setAttribute("aria-label", `${nextTheme === "dark" ? "Light" : "Dark"} theme`);
+      button.setAttribute("aria-pressed", nextTheme === "dark" ? "true" : "false");
       button.dataset.hyThemeButton = nextTheme;
     }
     installThemeOverride();
@@ -100,7 +100,6 @@
       }
 
       :root[data-hy-theme="light"] #root > div > header,
-      :root[data-hy-theme="light"] #CommonHeader,
       :root[data-hy-theme="light"] section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child h1,
       :root[data-hy-theme="light"] section[class*="grid-template-areas"] section,
       :root[data-hy-theme="light"] section[class*="grid-template-areas"] aside,
@@ -109,6 +108,104 @@
         background: #fff !important;
         border-color: #b7b7b7 !important;
         color: #222 !important;
+      }
+
+      :root[data-hy-theme="light"] #root > div > header a[title="ニコニコ動画"]::after {
+        color: #111 !important;
+        text-shadow: 0 1px 0 #fff !important;
+      }
+
+      :root[data-hy-theme="light"] #root > div > header form[role="search"],
+      :root[data-hy-theme="light"] #root > div > header input[role="combobox"],
+      :root[data-hy-theme="light"] input,
+      :root[data-hy-theme="light"] textarea,
+      :root[data-hy-theme="light"] select {
+        background: #fff !important;
+        border-color: #999 !important;
+        color: #111 !important;
+      }
+
+      :root[data-hy-theme="light"] #root > div > header form[role="search"]::before {
+        background: linear-gradient(#fff, #e2e2e2) !important;
+        border-right-color: #999 !important;
+        color: #111 !important;
+        text-shadow: 0 1px 0 #fff !important;
+      }
+
+      :root[data-hy-theme="light"] section[class*="grid-template-areas"]::after,
+      :root[data-hy-theme="light"] section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:nth-child(2),
+      :root[data-hy-theme="light"] a[data-anchor-area="tags"],
+      :root[data-hy-theme="light"] a[href^="/tag/"],
+      :root[data-hy-theme="light"] #TagItemsCounter,
+      :root[data-hy-theme="light"] #TagItemsShareButton,
+      :root[data-hy-theme="light"] .PlayerPresenter textarea[placeholder="コメントを入力"],
+      :root[data-hy-theme="light"] .PlayerPresenter input[placeholder="コマンド"],
+      :root[data-hy-theme="light"] div[class*="grid-area_"][class*="sidebar"] section > div {
+        background: #fff !important;
+        border-color: #999 !important;
+        color: #111 !important;
+        text-shadow: none !important;
+      }
+
+      :root[data-hy-theme="light"] a[data-anchor-area="tags"],
+      :root[data-hy-theme="light"] a[href^="/tag/"],
+      :root[data-hy-theme="light"] #TagItemsCounter,
+      :root[data-hy-theme="light"] #TagItemsShareButton {
+        background: linear-gradient(#fff, #e7e7e7) !important;
+        color: #0645ad !important;
+      }
+
+      :root[data-hy-theme="light"] section[class*="grid-template-areas"] section > header,
+      :root[data-hy-theme="light"] div[class*="grid-area_"][class*="sidebar"] section > header {
+        background: linear-gradient(#fdfdfd, #e1e1e1) !important;
+        border-color: #b7b7b7 !important;
+        color: #111 !important;
+        text-shadow: 0 1px 0 #fff !important;
+      }
+
+      :root[data-hy-theme="light"] div[class*="grid-area_"][class*="sidebar"] section > header *,
+      :root[data-hy-theme="light"] section[class*="grid-template-areas"] section > header * {
+        color: #111 !important;
+        fill: #111 !important;
+      }
+
+      :root[data-hy-theme="light"] div[class*="grid-area_"][class*="sidebar"] section [class*="Pressable"]:nth-child(even),
+      :root[data-hy-theme="light"] div[class*="grid-area_"][class*="sidebar"] section li:nth-child(even) {
+        background: #eee !important;
+        color: #111 !important;
+      }
+
+      :root[data-hy-theme="light"] div[class*="grid-area_"][class*="sidebar"] section [class*="Pressable"]:hover,
+      :root[data-hy-theme="light"] div[class*="grid-area_"][class*="sidebar"] section li:hover {
+        background: #dcdcdc !important;
+      }
+
+      :root[data-hy-theme="light"] #root main button:not([aria-label="コメント投稿ボタン"]):not([aria-label*="ニコる"]):not([data-element-name*="nicoru"]),
+      :root[data-hy-theme="light"] #root main [role="button"]:not([aria-label="コメント投稿ボタン"]):not([aria-label*="ニコる"]):not([data-element-name*="nicoru"]),
+      :root[data-hy-theme="light"] #root > div > header button,
+      :root[data-hy-theme="light"] #root > div > header [role="button"],
+      :root[data-hy-theme="light"] #root > div > header .Pressable {
+        background: linear-gradient(#fff, #e1e1e1) !important;
+        border-color: #aaa !important;
+        color: #111 !important;
+        fill: #111 !important;
+        text-shadow: 0 1px 0 #fff !important;
+      }
+
+      :root[data-hy-theme="light"] #root main button:not([aria-label="コメント投稿ボタン"]):not([aria-label*="ニコる"]):not([data-element-name*="nicoru"]) *,
+      :root[data-hy-theme="light"] #root main [role="button"]:not([aria-label="コメント投稿ボタン"]):not([aria-label*="ニコる"]):not([data-element-name*="nicoru"]) *,
+      :root[data-hy-theme="light"] #root > div > header button *,
+      :root[data-hy-theme="light"] #root > div > header [role="button"] *,
+      :root[data-hy-theme="light"] #root > div > header .Pressable * {
+        color: #111 !important;
+        fill: #111 !important;
+      }
+
+      :root[data-hy-theme="light"] #root > div > header a:not([title="ニコニコ動画"]),
+      :root[data-hy-theme="light"] #root > div > header [class*="bg_layer"],
+      :root[data-hy-theme="light"] #root > div > header [class*="bg-c_layer"] {
+        background: #fff !important;
+        color: #111 !important;
       }
 
       :root[data-hy-theme="dark"] #root > div > header,
@@ -134,15 +231,13 @@
     setTheme(getTheme() === "dark" ? "light" : "dark");
   }
 
-  function installThemeButton() {
-    if (document.querySelector(".HarajukuThemeButton")) return;
-    const host = document.querySelector(SELECTORS.header) || document.body;
+  function createThemeButton() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "HarajukuThemeButton";
+    button.innerHTML = '<span class="HarajukuThemeButton-sun" aria-hidden="true">☀</span><span class="HarajukuThemeButton-knob" aria-hidden="true"></span><span class="HarajukuThemeButton-moon" aria-hidden="true">☾</span>';
     button.addEventListener("click", toggleTheme);
-    host.appendChild(button);
-    setTheme(getTheme());
+    return button;
   }
 
   function readDetailMeta() {
@@ -230,45 +325,64 @@
     return result;
   }
 
-  function makeValue(label, value, key) {
+  function makeStatItem(label, key) {
     const node = document.createElement("div");
-    node.className = key === "postedAt" ? "HarajukuMetaPanel-date" : "HarajukuMetaPanel-row";
+    node.className = key === "postedAt" ? "HarajukuStats-date" : "HarajukuStats-row";
     node.dataset.hyKey = key;
 
     const labelNode = document.createElement("span");
-    labelNode.className = "HarajukuMetaPanel-label";
+    labelNode.className = "HarajukuStats-label";
     labelNode.textContent = label;
 
     const valueNode = document.createElement("span");
-    valueNode.className = "HarajukuMetaPanel-value";
-    valueNode.textContent = value || "-";
+    valueNode.className = "HarajukuStats-value";
+    valueNode.textContent = "-";
 
     node.append(labelNode, valueNode);
     return node;
   }
 
-  function renderMetaPanel() {
-    const sidebar = document.querySelector(SELECTORS.sidebarPanel);
-    if (!sidebar) return false;
+  function createChrome() {
+    const chrome = document.createElement("div");
+    chrome.className = "HarajukuWatchChrome";
 
-    const values = currentMeta();
-    let panel = sidebar.querySelector(":scope > .HarajukuMetaPanel");
-    if (!panel) {
-      panel = document.createElement("div");
-      panel.className = "HarajukuMetaPanel";
-      sidebar.prepend(panel);
+    const stats = document.createElement("div");
+    stats.className = "HarajukuStats";
+    for (const item of META_ITEMS) {
+      stats.append(makeStatItem(item.label, item.key));
     }
 
-    const signature = META_ITEMS.map((item) => values[item.source] || "-").join("\n");
-    if (panel.dataset.hySignature === signature) return true;
-    panel.dataset.hySignature = signature;
+    chrome.append(stats, createThemeButton());
+    return chrome;
+  }
 
-    panel.replaceChildren(
-      makeValue("再生", values["再生"], "views"),
-      makeValue("コメント", values["コメント"], "comments"),
-      makeValue("マイリスト", values["マイリスト"], "mylists"),
-      makeValue("投稿日時", values["投稿日時"], "postedAt"),
-    );
+  function ensureChrome() {
+    const sidebar = document.querySelector(SELECTORS.sidebarPanel);
+    if (!sidebar) return undefined;
+
+    let chrome = sidebar.querySelector(":scope > .HarajukuWatchChrome");
+    if (!chrome) {
+      chrome = createChrome();
+      sidebar.prepend(chrome);
+      setTheme(getTheme());
+    }
+
+    return chrome;
+  }
+
+  function renderChrome() {
+    const chrome = ensureChrome();
+    if (!chrome) return false;
+
+    const values = currentMeta();
+    const signature = META_ITEMS.map((item) => values[item.source] || "-").join("\n");
+    if (chrome.dataset.hySignature === signature) return true;
+    chrome.dataset.hySignature = signature;
+
+    for (const item of META_ITEMS) {
+      const value = chrome.querySelector(`.HarajukuStats [data-hy-key="${item.key}"] .HarajukuStats-value`);
+      if (value) value.textContent = values[item.source] || "-";
+    }
 
     return true;
   }
@@ -279,8 +393,7 @@
     scheduled = true;
     requestAnimationFrame(() => {
       scheduled = false;
-      installThemeButton();
-      renderMetaPanel();
+      renderChrome();
     });
   }
 

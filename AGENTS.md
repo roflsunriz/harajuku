@@ -14,7 +14,7 @@ The reference direction is:
 
 ## UserCSS / UserScript Constraints
 
-This project uses UserCSS plus an optional-but-supported UserScript.
+This project uses UserCSS plus a UserScript for dynamic watch-page UI.
 
 CSS cannot:
 
@@ -32,7 +32,7 @@ CSS can:
 
 UserScript can:
 
-- Copy modern niconico dynamic values into new stable DOM used by the CSS.
+- Copy modern niconico dynamic values into `.HarajukuWatchChrome`, the stable DOM used by the CSS.
 - Persist explicit light/dark theme choice with `localStorage`.
 - Add real controls such as the light/dark theme button.
 
@@ -85,4 +85,4 @@ The UserScript may also set `data-hy-theme="light"` or `data-hy-theme="dark"` on
 
 ## Known Limits
 
-Some visual content such as the title/detail summary may still be represented by CSS pseudo-elements for stability. Dynamic metadata such as views, comments, mylists, and posted date should come from the UserScript-created DOM rather than hardcoded CSS text.
+Some visual content such as the title/detail summary may still be represented by CSS pseudo-elements for stability. Dynamic metadata such as views, comments, mylists, and posted date should come from `.HarajukuWatchChrome` rather than hardcoded CSS text or repositioned modern niconico DOM.
