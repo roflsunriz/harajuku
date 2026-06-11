@@ -1399,4 +1399,42 @@
       color: #fff !important;
     }
   }
+
+  #root#root main .PlayerPresenter > div:first-child button,
+  #root#root main .PlayerPresenter > div:first-child [role="button"] {
+    background: transparent !important;
+    background-image: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  #root#root main .PlayerPresenter > div:first-child button:hover,
+  #root#root main .PlayerPresenter > div:first-child [role="button"]:hover {
+    background: transparent !important;
+    background-image: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  :root[data-hy-theme="light"] button[aria-label="ニコるボタン"][data-element-name="nicoru_click"] {
+    background: #fff !important;
+    border-color: #fff !important;
+    box-shadow: none !important;
+  }
+
+  :root[data-hy-theme="light"] button[aria-label="ニコるボタン"][data-element-name="nicoru_click"]:hover {
+    background: #f4f4f4 !important;
+    border-color: #f4f4f4 !important;
+  }
+
+  :root[data-hy-theme="dark"] button[aria-label="ニコるボタン"][data-element-name="nicoru_click"] {
+    background: #202020 !important;
+    border-color: #202020 !important;
+    box-shadow: none !important;
+  }
+
+  :root[data-hy-theme="dark"] button[aria-label="ニコるボタン"][data-element-name="nicoru_click"]:hover {
+    background: #252525 !important;
+    border-color: #252525 !important;
+  }
 }
