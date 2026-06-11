@@ -27,6 +27,7 @@
     --hy-shadow: none;
     --hy-width: min(1540px, calc(100vw - 48px));
     --hy-sidebar-width: 460px;
+    --hy-stat-date-width: 176px;
     --hy-gap: 8px;
     --hy-player-width: calc(var(--hy-width) - var(--hy-sidebar-width) - var(--hy-gap));
   }
@@ -450,13 +451,15 @@
     content: "再生:  76,501";
     position: absolute;
     left: 0;
-    right: 0;
+    right: var(--hy-stat-date-width);
     top: 0;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 18px;
     box-sizing: border-box;
     margin: 0;
-    padding: 2px 9px;
+    padding: 0 9px;
     border: 1px solid #111;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, .38) 0, rgba(255, 255, 255, .18) 42%, rgba(255, 255, 255, 0) 43%),
@@ -464,7 +467,8 @@
     color: #fff;
     font-family: "MS PGothic", "Meiryo", sans-serif;
     font-size: 12px;
-    line-height: 12px;
+    line-height: 1;
+    text-align: center;
     text-shadow: 0 -1px 0 #000;
   }
 
@@ -472,13 +476,15 @@
     content: "コメント:  1,224";
     position: absolute;
     left: 0;
-    right: 0;
+    right: var(--hy-stat-date-width);
     top: 20px;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 18px;
     box-sizing: border-box;
     margin: 0;
-    padding: 2px 9px;
+    padding: 0 9px;
     border: 1px solid #111;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, .38) 0, rgba(255, 255, 255, .18) 42%, rgba(255, 255, 255, 0) 43%),
@@ -486,7 +492,8 @@
     color: #fff;
     font-family: "MS PGothic", "Meiryo", sans-serif;
     font-size: 12px;
-    line-height: 12px;
+    line-height: 1;
+    text-align: center;
     text-shadow: 0 -1px 0 #000;
   }
 
@@ -502,13 +509,15 @@
     content: "マイリスト:  427";
     position: absolute;
     left: 0;
-    right: 0;
+    right: var(--hy-stat-date-width);
     top: 40px;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 18px;
     box-sizing: border-box;
     margin: 0;
-    padding: 2px 9px;
+    padding: 0 9px;
     border: 1px solid #111;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, .38) 0, rgba(255, 255, 255, .18) 42%, rgba(255, 255, 255, 0) 43%),
@@ -516,7 +525,8 @@
     color: #fff;
     font-family: "MS PGothic", "Meiryo", sans-serif;
     font-size: 12px;
-    line-height: 12px;
+    line-height: 1;
+    text-align: center;
     text-shadow: 0 -1px 0 #000;
   }
 
@@ -631,7 +641,7 @@
     width: var(--hy-player-width) !important;
     height: 34px !important;
     min-height: 34px !important;
-    overflow: hidden !important;
+    overflow: visible !important;
     display: flex !important;
     align-items: center !important;
     padding: 0 8px !important;
@@ -660,6 +670,52 @@
 
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > :not(h1) {
     display: none !important;
+  }
+
+  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > div:has(> time[datetime]) {
+    position: absolute !important;
+    left: calc(var(--hy-player-width) + var(--hy-gap) + var(--hy-sidebar-width) - var(--hy-stat-date-width)) !important;
+    top: 410px !important;
+    z-index: 10 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: var(--hy-stat-date-width) !important;
+    height: 58px !important;
+    box-sizing: border-box !important;
+    padding: 0 10px !important;
+    border: 1px solid #111 !important;
+    border-left: 0 !important;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, .42) 0, rgba(255, 255, 255, .18) 44%, rgba(255, 255, 255, 0) 45%),
+      linear-gradient(#777 0, #565656 48%, #393939 49%, #1d1d1d 100%) !important;
+    color: #fff !important;
+    font-family: "MS PGothic", "Meiryo", sans-serif !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    line-height: 1.35 !important;
+    text-align: center !important;
+    text-shadow: 0 -1px 0 #000 !important;
+    white-space: normal !important;
+    pointer-events: none !important;
+  }
+
+  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > div:has(> time[datetime]) > :not(time) {
+    display: none !important;
+  }
+
+  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > div:has(> time[datetime]) > time[datetime] {
+    display: block !important;
+    color: #fff !important;
+    font: inherit !important;
+  }
+
+  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > div:has(> time[datetime]) > time[datetime]::before {
+    content: "投稿日時";
+    display: block;
+    margin-bottom: 4px;
+    color: #e6e6e6;
+    font-weight: bold;
   }
 
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child h1 {
