@@ -438,6 +438,7 @@
   }
 
   div[class*="grid-area_"][class*="sidebar"] > div > div:first-child {
+    anchor-name: --hy-comment-panel;
     position: relative !important;
     height: calc(var(--watch-player-height) + 49px) !important;
     background: var(--hy-panel) !important;
@@ -639,15 +640,14 @@
 
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child {
     width: var(--hy-player-width) !important;
-    height: 34px !important;
-    min-height: 34px !important;
+    height: 0 !important;
+    min-height: 0 !important;
     overflow: visible !important;
-    display: flex !important;
-    align-items: center !important;
-    padding: 0 8px !important;
+    display: block !important;
+    padding: 0 !important;
     box-sizing: border-box !important;
-    border: 1px solid #aaa !important;
-    background: linear-gradient(var(--hy-panel), var(--hy-panel-2)) !important;
+    border: 0 !important;
+    background: transparent !important;
     color: var(--hy-text) !important;
     font-size: 12px !important;
     line-height: 20px !important;
@@ -655,10 +655,7 @@
   }
 
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 3;
+    position: static !important;
   }
 
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child {
@@ -675,7 +672,7 @@
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > div:has(> time[datetime]) {
     position: absolute !important;
     left: calc(var(--hy-player-width) + var(--hy-gap) + var(--hy-sidebar-width) - var(--hy-stat-date-width)) !important;
-    top: 410px !important;
+    top: 142px !important;
     z-index: 10 !important;
     display: flex !important;
     align-items: center !important;
@@ -718,9 +715,28 @@
     font-weight: bold;
   }
 
+  @supports (top: anchor(--hy-comment-panel top)) and (left: calc(anchor(--hy-comment-panel right) - 176px)) {
+    section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > div:has(> time[datetime]) {
+      position-anchor: --hy-comment-panel;
+      left: calc(anchor(right) - var(--hy-stat-date-width)) !important;
+      top: anchor(top) !important;
+    }
+  }
+
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child h1 {
     display: block !important;
-    max-width: 100% !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 3 !important;
+    width: var(--hy-player-width) !important;
+    height: 34px !important;
+    max-width: var(--hy-player-width) !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 6px 8px !important;
+    border: 1px solid #aaa !important;
+    background: linear-gradient(var(--hy-panel), var(--hy-panel-2)) !important;
     overflow: hidden !important;
     color: var(--hy-text) !important;
     font-size: 16px !important;
@@ -1027,6 +1043,8 @@
     }
 
     section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child h1 {
+      background: linear-gradient(#2e2e2e, #202020) !important;
+      border-color: #666 !important;
       color: #f2f2f2 !important;
     }
 
