@@ -1,14 +1,13 @@
 /* ==UserStyle==
 @name           niconico Harajuku-ish
 @namespace      github.com/local/harajyuku
-@version        0.3.18
+@version        0.3.19
 @description    Modern nicovideo watch page styled toward the Harajuku-era niconico look.
 @author         local
 @match          https://www.nicovideo.jp/watch/*
-@match          https://www.nicovideo.jp/video_top*
 ==/UserStyle== */
 
-@-moz-document domain("nicovideo.jp") {
+@-moz-document url-prefix("https://www.nicovideo.jp/watch/") {
   :root {
     --hy-bg: #fff;
     --hy-page: #fff;

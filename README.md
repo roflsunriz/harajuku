@@ -10,7 +10,7 @@
 https://www.nicovideo.jp/watch/*
 ```
 
-他のニコニコ動画ページにも一部の共通ヘッダースタイルが当たる可能性があります。
+CSS 側でも `https://www.nicovideo.jp/watch/` に限定しているため、他のページには適用されません。
 
 ## Stylus で使う
 
