@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           niconico Harajuku-ish
 @namespace      github.com/local/harajyuku
-@version        0.3.19
+@version        0.3.20
 @description    Modern nicovideo watch page styled toward the Harajuku-era niconico look.
 @author         local
 @match          https://www.nicovideo.jp/watch/*
@@ -311,7 +311,18 @@
 
   .PlayerPresenter [aria-label*="video - currentTime"],
   .PlayerPresenter [aria-label="volume"] {
-    background: #f5f5f5 !important;
+    background: #2f94dd !important;
+  }
+
+  .PlayerPresenter [aria-label*="video - currentTime"]:hover,
+  .PlayerPresenter [aria-label="volume"]:hover,
+  .PlayerPresenter [class*="surfaceAccentAzure"],
+  .PlayerPresenter [class*="primaryAzure"] {
+    background: #2f94dd !important;
+  }
+
+  .PlayerPresenter [role="slider"] {
+    accent-color: #2f94dd !important;
   }
 
   .PlayerPresenter [role="progressbar"] {
@@ -347,8 +358,14 @@
   }
 
   .PlayerPresenter > div:nth-child(2) button:hover {
-    background: linear-gradient(#fff, #cfcfcf) !important;
+    background: linear-gradient(#52b7ff, #1f86d0) !important;
+    border-color: #0966a8 !important;
+    color: #fff !important;
     text-decoration: none !important;
+  }
+
+  .PlayerPresenter > div:nth-child(2) button:hover svg {
+    fill: #fff !important;
   }
 
   button[aria-label="コメント投稿ボタン"] {
@@ -976,6 +993,18 @@
       background: #151515 !important;
       color: #eee !important;
       border-color: #666 !important;
+    }
+
+    .PlayerPresenter [aria-label*="video - currentTime"],
+    .PlayerPresenter [aria-label="volume"],
+    .PlayerPresenter [aria-label*="video - currentTime"]:hover,
+    .PlayerPresenter [aria-label="volume"]:hover,
+    .PlayerPresenter [class*="surfaceAccentAzure"],
+    .PlayerPresenter [class*="primaryAzure"],
+    .PlayerPresenter > div:nth-child(2) button:hover {
+      background: linear-gradient(#52b7ff, #1f86d0) !important;
+      border-color: #0966a8 !important;
+      color: #fff !important;
     }
   }
 }
