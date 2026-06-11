@@ -32,6 +32,34 @@
     --hy-player-width: calc(var(--hy-width) - var(--hy-sidebar-width) - var(--hy-gap));
   }
 
+  :root[data-hy-theme="light"] {
+    --hy-bg: #fff;
+    --hy-page: #fff;
+    --hy-panel: #fff;
+    --hy-panel-2: #f2f2f2;
+    --hy-border: #b7b7b7;
+    --hy-border-dark: #8d8d8d;
+    --hy-text: #222;
+    --hy-muted: #666;
+    --hy-link: #0645ad;
+    --hy-link-hover: #c00;
+    --hy-player: #111;
+  }
+
+  :root[data-hy-theme="dark"] {
+    --hy-bg: #151515;
+    --hy-page: #1b1b1b;
+    --hy-panel: #202020;
+    --hy-panel-2: #2a2a2a;
+    --hy-border: #555;
+    --hy-border-dark: #777;
+    --hy-text: #e8e8e8;
+    --hy-muted: #aaa;
+    --hy-link: #8dbbff;
+    --hy-link-hover: #ff9a9a;
+    --hy-player: #050505;
+  }
+
   html,
   body {
     background: var(--hy-bg) !important;
@@ -70,6 +98,41 @@
     min-height: 36px !important;
     margin: 0 !important;
     overflow: visible !important;
+  }
+
+  .HarajukuThemeButton {
+    position: absolute !important;
+    right: calc((100vw - var(--hy-width)) / 2 + 8px) !important;
+    top: 44px !important;
+    z-index: 50 !important;
+    width: 58px !important;
+    height: 22px !important;
+    min-width: 58px !important;
+    padding: 0 !important;
+    border: 1px solid #888 !important;
+    border-radius: var(--hy-radius) !important;
+    background: linear-gradient(#fff, #d8d8d8) !important;
+    color: #111 !important;
+    font-family: "MS PGothic", "Meiryo", sans-serif !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    line-height: 20px !important;
+    text-align: center !important;
+    text-shadow: 0 1px 0 #fff !important;
+    cursor: pointer !important;
+  }
+
+  .HarajukuThemeButton:hover {
+    border-color: #555 !important;
+    background: linear-gradient(#fff, #cfcfcf) !important;
+    text-decoration: none !important;
+  }
+
+  :root[data-hy-theme="dark"] .HarajukuThemeButton {
+    border-color: #666 !important;
+    background: linear-gradient(#3a3a3a, #202020) !important;
+    color: #eee !important;
+    text-shadow: 0 -1px 0 #000 !important;
   }
 
   #CommonHeader a[href^="https://www.nicovideo.jp?"] {
@@ -438,7 +501,6 @@
   }
 
   div[class*="grid-area_"][class*="sidebar"] > div > div:first-child {
-    anchor-name: --hy-comment-panel;
     position: relative !important;
     height: calc(var(--watch-player-height) + 49px) !important;
     background: var(--hy-panel) !important;
@@ -449,53 +511,11 @@
   }
 
   div[class*="grid-area_"][class*="sidebar"] > div > div:first-child::before {
-    content: "再生:  76,501";
-    position: absolute;
-    left: 0;
-    right: var(--hy-stat-date-width);
-    top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 18px;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0 9px;
-    border: 1px solid #111;
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, .38) 0, rgba(255, 255, 255, .18) 42%, rgba(255, 255, 255, 0) 43%),
-      linear-gradient(#656565 0, #383838 48%, #161616 49%, #050505 100%);
-    color: #fff;
-    font-family: "MS PGothic", "Meiryo", sans-serif;
-    font-size: 12px;
-    line-height: 1;
-    text-align: center;
-    text-shadow: 0 -1px 0 #000;
+    content: none !important;
   }
 
   div[class*="grid-area_"][class*="sidebar"] > div > div:first-child::after {
-    content: "コメント:  1,224";
-    position: absolute;
-    left: 0;
-    right: var(--hy-stat-date-width);
-    top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 18px;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0 9px;
-    border: 1px solid #111;
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, .38) 0, rgba(255, 255, 255, .18) 42%, rgba(255, 255, 255, 0) 43%),
-      linear-gradient(#656565 0, #383838 48%, #161616 49%, #050505 100%);
-    color: #fff;
-    font-family: "MS PGothic", "Meiryo", sans-serif;
-    font-size: 12px;
-    line-height: 1;
-    text-align: center;
-    text-shadow: 0 -1px 0 #000;
+    content: none !important;
   }
 
   div[class*="grid-area_"][class*="sidebar"] section {
@@ -507,28 +527,86 @@
   }
 
   div[class*="grid-area_"][class*="sidebar"] section::before {
-    content: "マイリスト:  427";
-    position: absolute;
-    left: 0;
-    right: var(--hy-stat-date-width);
-    top: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 18px;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0 9px;
-    border: 1px solid #111;
+    content: none !important;
+  }
+
+  .HarajukuMetaPanel {
+    position: absolute !important;
+    inset: 0 0 auto 0 !important;
+    z-index: 10 !important;
+    height: 60px !important;
+    box-sizing: border-box !important;
+    font-family: "MS PGothic", "Meiryo", sans-serif !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    color: #fff !important;
+    text-shadow: 0 -1px 0 #000 !important;
+    pointer-events: none !important;
+  }
+
+  .HarajukuMetaPanel-row {
+    position: absolute !important;
+    left: 0 !important;
+    right: var(--hy-stat-date-width) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    height: 18px !important;
+    box-sizing: border-box !important;
+    padding: 0 9px !important;
+    border: 1px solid #111 !important;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, .38) 0, rgba(255, 255, 255, .18) 42%, rgba(255, 255, 255, 0) 43%),
-      linear-gradient(#656565 0, #383838 48%, #161616 49%, #050505 100%);
-    color: #fff;
-    font-family: "MS PGothic", "Meiryo", sans-serif;
-    font-size: 12px;
-    line-height: 1;
-    text-align: center;
-    text-shadow: 0 -1px 0 #000;
+      linear-gradient(#656565 0, #383838 48%, #161616 49%, #050505 100%) !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+  }
+
+  .HarajukuMetaPanel-row[data-hy-key="views"] {
+    top: 0 !important;
+  }
+
+  .HarajukuMetaPanel-row[data-hy-key="comments"] {
+    top: 20px !important;
+  }
+
+  .HarajukuMetaPanel-row[data-hy-key="mylists"] {
+    top: 40px !important;
+  }
+
+  .HarajukuMetaPanel-date {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    width: var(--hy-stat-date-width) !important;
+    height: 58px !important;
+    box-sizing: border-box !important;
+    padding: 0 10px !important;
+    border: 1px solid #111 !important;
+    border-left: 0 !important;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, .42) 0, rgba(255, 255, 255, .18) 44%, rgba(255, 255, 255, 0) 45%),
+      linear-gradient(#777 0, #565656 48%, #393939 49%, #1d1d1d 100%) !important;
+    line-height: 1.35 !important;
+    text-align: center !important;
+    white-space: normal !important;
+  }
+
+  .HarajukuMetaPanel-label,
+  .HarajukuMetaPanel-value {
+    color: #fff !important;
+    font: inherit !important;
+  }
+
+  .HarajukuMetaPanel-row .HarajukuMetaPanel-label::after {
+    content: ":";
   }
 
   div[class*="grid-area_"][class*="sidebar"] section > header {
@@ -667,60 +745,6 @@
 
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > :not(h1) {
     display: none !important;
-  }
-
-  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > div:has(> time[datetime]) {
-    position: absolute !important;
-    left: calc(var(--hy-player-width) + var(--hy-gap) + var(--hy-sidebar-width) - var(--hy-stat-date-width)) !important;
-    top: 142px !important;
-    z-index: 10 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: var(--hy-stat-date-width) !important;
-    height: 58px !important;
-    box-sizing: border-box !important;
-    padding: 0 10px !important;
-    border: 1px solid #111 !important;
-    border-left: 0 !important;
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, .42) 0, rgba(255, 255, 255, .18) 44%, rgba(255, 255, 255, 0) 45%),
-      linear-gradient(#777 0, #565656 48%, #393939 49%, #1d1d1d 100%) !important;
-    color: #fff !important;
-    font-family: "MS PGothic", "Meiryo", sans-serif !important;
-    font-size: 12px !important;
-    font-weight: bold !important;
-    line-height: 1.35 !important;
-    text-align: center !important;
-    text-shadow: 0 -1px 0 #000 !important;
-    white-space: normal !important;
-    pointer-events: none !important;
-  }
-
-  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > div:has(> time[datetime]) > :not(time) {
-    display: none !important;
-  }
-
-  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > div:has(> time[datetime]) > time[datetime] {
-    display: block !important;
-    color: #fff !important;
-    font: inherit !important;
-  }
-
-  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > div:has(> time[datetime]) > time[datetime]::before {
-    content: "投稿日時";
-    display: block;
-    margin-bottom: 4px;
-    color: #e6e6e6;
-    font-weight: bold;
-  }
-
-  @supports (top: anchor(--hy-comment-panel top)) and (left: calc(anchor(--hy-comment-panel right) - 176px)) {
-    section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > div:has(> time[datetime]) {
-      position-anchor: --hy-comment-panel;
-      left: calc(anchor(right) - var(--hy-stat-date-width)) !important;
-      top: anchor(top) !important;
-    }
   }
 
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child h1 {

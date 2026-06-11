@@ -12,15 +12,14 @@ The reference direction is:
 - Top information area in the order: title, short details row, tags, player.
 - Harajuku-like square panels, low border radius, compact typography, and old-style controls.
 
-## UserCSS Constraints
+## UserCSS / UserScript Constraints
 
-This project is CSS-only.
+This project uses UserCSS plus an optional-but-supported UserScript.
 
 CSS cannot:
 
 - Recreate the old Harajuku HTML structure exactly.
-- Persist arbitrary click state unless the modern page already exposes state through DOM attributes.
-- Use localStorage, cookies, or script-driven class toggles.
+- Copy text from one DOM node into another DOM node or pseudo-element.
 - Create fully functional new buttons from pseudo-elements.
 
 CSS can:
@@ -30,6 +29,12 @@ CSS can:
 - Use existing state attributes such as `aria-hidden`.
 - Follow OS/browser theme through `prefers-color-scheme`.
 - Use hover/focus/active states for temporary interactions.
+
+UserScript can:
+
+- Copy modern niconico dynamic values into new stable DOM used by the CSS.
+- Persist explicit light/dark theme choice with `localStorage`.
+- Add real controls such as the light/dark theme button.
 
 ## Selector Policy
 
@@ -66,9 +71,9 @@ The CSS should key off:
 
 When expanded, the details section must reserve vertical space so tags, player, and comments move down instead of being overlapped.
 
-## Dark Mode
+## Color Theme
 
-Dark mode is controlled through:
+The UserCSS still supports OS/browser dark mode through:
 
 ```css
 @media (prefers-color-scheme: dark) {
@@ -76,8 +81,8 @@ Dark mode is controlled through:
 }
 ```
 
-Do not add JavaScript or a CSS-only fake toggle unless specifically requested.
+The UserScript may also set `data-hy-theme="light"` or `data-hy-theme="dark"` on the root element for the explicit theme button.
 
 ## Known Limits
 
-Some visual content such as the title/detail summary is represented by CSS pseudo-elements for stability. If a fully dynamic value is required, a UserScript would be needed.
+Some visual content such as the title/detail summary may still be represented by CSS pseudo-elements for stability. Dynamic metadata such as views, comments, mylists, and posted date should come from the UserScript-created DOM rather than hardcoded CSS text.
