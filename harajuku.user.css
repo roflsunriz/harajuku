@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           niconico Harajuku-ish
 @namespace      github.com/roflsunriz/harajuku
-@version        0.3.20
+@version        0.3.23
 @description    Modern nicovideo watch page styled toward the Harajuku-era niconico look.
 @author         roflsunriz
 @match          https://www.nicovideo.jp/watch/*
@@ -627,7 +627,58 @@
   }
 
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child {
+    width: var(--hy-player-width) !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 8px !important;
+    box-sizing: border-box !important;
+    border: 1px solid #aaa !important;
+    background: linear-gradient(var(--hy-panel), var(--hy-panel-2)) !important;
+    color: var(--hy-text) !important;
+    font-size: 12px !important;
+    line-height: 20px !important;
+    white-space: nowrap !important;
+  }
+
+  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 3;
+  }
+
+  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+  }
+
+  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :first-child > :not(h1) {
     display: none !important;
+  }
+
+  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child h1 {
+    display: block !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    color: var(--hy-text) !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    line-height: 20px !important;
+    white-space: nowrap !important;
+    text-overflow: clip !important;
+  }
+
+  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child > :not(:first-child) {
+    display: none !important;
+  }
+
+  section[class*="grid-template-areas"]::before {
+    content: none !important;
   }
 
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type {
@@ -644,27 +695,6 @@
     padding: 0 !important;
     border: 0 !important;
     background: transparent !important;
-  }
-
-  section[class*="grid-template-areas"]::before {
-    content: "DECO*27 - モザイクロール feat. GUMI";
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 3;
-    width: var(--hy-player-width);
-    height: 34px;
-    box-sizing: border-box;
-    padding: 7px 8px 0;
-    border: 1px solid #aaa;
-    background: linear-gradient(#fff, #ededed);
-    color: #111;
-    font-size: 16px;
-    font-weight: bold;
-    line-height: 20px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: clip;
   }
 
   section[class*="grid-template-areas"]::after {
@@ -930,6 +960,16 @@
     section[class*="grid-template-areas"]::before {
       background: linear-gradient(#2e2e2e, #202020) !important;
       border-color: #666 !important;
+      color: #f2f2f2 !important;
+    }
+
+    section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child {
+      background: linear-gradient(#2e2e2e, #202020) !important;
+      border-color: #666 !important;
+      color: #f2f2f2 !important;
+    }
+
+    section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child h1 {
       color: #f2f2f2 !important;
     }
 
