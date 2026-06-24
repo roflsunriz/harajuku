@@ -42,7 +42,7 @@ CSSだけでは別DOMの数値をコピーできないため、[harajuku.user.js
 
 `harajuku.user.css` には `@-moz-document url-prefix("https://www.nicovideo.jp/watch/")` が含まれています。Stylus ではそのまま貼り付けられます。
 
-light/dark テーマボタンを使う場合は、ボタンの選択が OS やブラウザのライト/ダーク設定より優先されます。
+light/dark テーマボタンを使う場合は、ボタンの選択が最優先です。OS やブラウザのライト/ダーク設定より、UserScript が `<html>` に設定する `data-hy-theme="light"` / `data-hy-theme="dark"` が優先されます。
 
 ## Firefox DevTools RDP で確認する
 
@@ -204,10 +204,15 @@ python -m pip install websocket-client
 
 UserScript がページ右上に `Dark` / `Light` ボタンを追加します。選択は `localStorage` に保存されます。
 
-UserScript を使わない場合、CSSはOS またはブラウザの配色設定に追従します。
+配色の優先順位は次の通りです。
 
-- 通常配色: `prefers-color-scheme: light`
-- 暗色配色: `prefers-color-scheme: dark`
+1. `Dark` / `Light` ボタンで選んだ明示テーマ
+2. UserScript を使わない場合のみ、OS またはブラウザの配色設定
+
+明示テーマは `<html>` の `data-hy-theme="light"` / `data-hy-theme="dark"` として反映され、CSS内の `prefers-color-scheme` より優先されます。
+
+- OS/ブラウザ通常配色: `prefers-color-scheme: light`
+- OS/ブラウザ暗色配色: `prefers-color-scheme: dark`
 
 ## 更新
 
