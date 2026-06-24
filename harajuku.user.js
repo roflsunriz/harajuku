@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         niconico Harajuku-ish helpers
 // @namespace    github.com/roflsunriz/harajuku
-// @version      0.1.0
+// @version      0.1.1
 // @description  Adds dynamic Harajuku-ish watch-page metadata and a light/dark theme button.
 // @author       roflsunriz
 // @match        https://www.nicovideo.jp/watch/*
@@ -17,8 +17,11 @@
 
   const SELECTORS = {
     sidebarPanel: 'div[class*="grid-area_"][class*="sidebar"] > div > div:first-child',
+    grid: 'section[class*="grid-template-areas"]',
     bottom: 'section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"]',
     detailList: 'section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type dl',
+    detailContent: 'section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type > :not(header)',
+    title: 'section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child h1',
     header: "#root > div > header",
   };
 
@@ -196,6 +199,8 @@
   }
 
   function renderChrome() {
+    updateLayoutMetrics();
+
     const chrome = ensureChrome();
     if (!chrome) return false;
 
@@ -210,6 +215,44 @@
     }
 
     return true;
+  }
+
+  function px(value) {
+    return `${Math.max(0, Math.round(value))}px`;
+  }
+
+  let resizeObserver;
+  function observeLayoutTargets(targets) {
+    if (!("ResizeObserver" in window)) return;
+    if (!resizeObserver) resizeObserver = new ResizeObserver(scheduleRender);
+
+    for (const target of targets) {
+      if (target) resizeObserver.observe(target);
+    }
+  }
+
+  function updateLayoutMetrics() {
+    const grid = document.querySelector(SELECTORS.grid);
+    const title = document.querySelector(SELECTORS.title);
+    const sidebar = document.querySelector(SELECTORS.sidebarPanel);
+    const detailContent = document.querySelector(SELECTORS.detailContent);
+
+    if (detailContent?.getAttribute("aria-hidden") === "false") {
+      const borderHeight = detailContent.getBoundingClientRect().height - detailContent.clientHeight;
+      const nextDetailHeight = Math.max(
+        detailContent.scrollHeight + Math.max(0, borderHeight),
+        detailContent.getBoundingClientRect().height,
+      );
+      ROOT.style.setProperty("--hy-detail-expanded-height", px(nextDetailHeight));
+    }
+
+    if (title && sidebar) {
+      const titleTop = title.getBoundingClientRect().top;
+      const sidebarBottom = sidebar.getBoundingClientRect().bottom;
+      ROOT.style.setProperty("--hy-watch-sidebar-panel-height", px(sidebarBottom - titleTop));
+    }
+
+    observeLayoutTargets([grid, title, sidebar, detailContent]);
   }
 
   let scheduled = false;
@@ -238,10 +281,13 @@
 
     const observer = new MutationObserver(scheduleRender);
     observer.observe(document.body, {
+      attributes: true,
       childList: true,
       subtree: true,
       characterData: true,
     });
+
+    window.addEventListener("resize", scheduleRender);
   }
 
   if (document.body) start();
