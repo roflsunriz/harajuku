@@ -42,6 +42,8 @@ CSSだけでは別DOMの数値をコピーできないため、[harajuku.user.js
 
 `harajuku.user.css` には `@-moz-document url-prefix("https://www.nicovideo.jp/watch/")` が含まれています。Stylus ではそのまま貼り付けられます。
 
+light/dark テーマボタンを使う場合は、ボタンの選択が OS やブラウザのライト/ダーク設定より優先されます。
+
 ## Firefox DevTools RDP で確認する
 
 ### Firefox を RDP 待ち受けで起動

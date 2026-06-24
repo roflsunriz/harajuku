@@ -1,14 +1,14 @@
 /* ==UserStyle==
 @name           niconico Harajuku-ish
 @namespace      github.com/roflsunriz/harajuku
-@version        0.3.27
+@version        0.3.28
 @description    Modern nicovideo watch page styled toward the Harajuku-era niconico look.
 @author         roflsunriz
 @match          https://www.nicovideo.jp/watch/*
 ==/UserStyle== */
 
 @-moz-document url-prefix("https://www.nicovideo.jp/watch/") {
-  :root {
+:root {
     --hy-bg: #fff;
     --hy-page: #fff;
     --hy-panel: #fff;
@@ -25,10 +25,41 @@
     --hy-player: #111;
     --hy-radius: 0;
     --hy-shadow: none;
-    --hy-width: min(1540px, calc(100vw - 48px));
-    --hy-sidebar-width: 460px;
-    --hy-stat-date-width: 176px;
     --hy-gap: 8px;
+    --hy-width: min(1540px, calc(100vw - clamp(24px, 4vw, 48px)));
+    --hy-sidebar-width: clamp(320px, 30vw, 460px);
+    --hy-stat-date-width: clamp(132px, 38%, 176px);
+    --hy-stat-height: 60px;
+    --hy-sidebar-header-height: 25px;
+    --hy-title-row-height: 34px;
+    --hy-detail-summary-height: 28px;
+    --hy-detail-expanded-height: clamp(180px, 26vh, 260px);
+    --hy-tag-strip-max-height: clamp(44px, 8vh, 64px);
+    --hy-title-to-detail-gap: 4px;
+    --hy-detail-to-tags-gap: 4px;
+    --hy-tags-to-player-gap: 12px;
+    --hy-details-panel-offset: 30px;
+    --hy-details-expanded-to-tags-gap: 6px;
+    --hy-pre-player-height: calc(
+      var(--hy-title-row-height) +
+      var(--hy-title-to-detail-gap) +
+      var(--hy-detail-summary-height) +
+      var(--hy-detail-to-tags-gap) +
+      var(--hy-tag-strip-max-height) +
+      var(--hy-tags-to-player-gap)
+    );
+    --hy-expanded-tags-top: calc(
+      var(--hy-title-row-height) +
+      var(--hy-title-to-detail-gap) +
+      var(--hy-details-panel-offset) +
+      var(--hy-detail-expanded-height) +
+      var(--hy-details-expanded-to-tags-gap)
+    );
+    --hy-expanded-pre-player-height: calc(
+      var(--hy-expanded-tags-top) +
+      var(--hy-tag-strip-max-height) +
+      var(--hy-tags-to-player-gap)
+    );
     --hy-player-width: calc(var(--hy-width) - var(--hy-sidebar-width) - var(--hy-gap));
   }
 
@@ -44,6 +75,7 @@
     --hy-link: #0645ad;
     --hy-link-hover: #c00;
     --hy-player: #111;
+    color-scheme: light;
   }
 
   :root[data-hy-theme="dark"] {
@@ -58,6 +90,7 @@
     --hy-link: #8dbbff;
     --hy-link-hover: #ff9a9a;
     --hy-player: #050505;
+    color-scheme: dark;
   }
 
   html,
@@ -280,11 +313,11 @@
 
   #root > div > header form[role="search"] {
     position: absolute !important;
-    left: 250px !important;
+    left: clamp(280px, 20vw, 300px) !important;
     top: 6px !important;
-    width: 450px !important;
+    width: clamp(260px, calc(var(--hy-width) - 440px), 450px) !important;
     height: 31px !important;
-    min-width: 450px !important;
+    min-width: 0 !important;
     max-width: 450px !important;
     display: flex !important;
     overflow: visible !important;
@@ -376,7 +409,7 @@
       "bottom sidebar" !important;
     position: relative !important;
     margin: 54px auto 0 !important;
-    padding: 146px 0 48px !important;
+    padding: var(--hy-pre-player-height) 0 48px !important;
     column-gap: var(--hy-gap) !important;
     row-gap: 8px !important;
   }
@@ -476,6 +509,76 @@
 
   .PlayerPresenter > div:nth-child(2) button:hover svg {
     fill: #fff !important;
+  }
+
+  [aria-label="動画プレーヤー設定"] {
+    position: absolute !important;
+    left: calc(var(--hy-player-width) + var(--hy-gap)) !important;
+    right: auto !important;
+    top: 0 !important;
+    width: var(--hy-sidebar-width) !important;
+    height: min(100%, calc(var(--hy-pre-player-height) + var(--watch-player-height, 60vh) + 49px)) !important;
+    max-height: min(100%, calc(var(--hy-pre-player-height) + var(--watch-player-height, 60vh) + 49px)) !important;
+    padding-top: 0 !important;
+    z-index: 60 !important;
+  }
+
+  #root [aria-label="動画プレーヤー設定"][aria-label="動画プレーヤー設定"] > section[class][class] {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    margin-top: 0 !important;
+    transform: none !important;
+  }
+
+  [aria-label="動画プレーヤー設定"] > section > div {
+    min-height: 0 !important;
+  }
+
+  [aria-label="動画プレーヤー設定"] > button[aria-label="Close"] {
+    top: 0.5lh !important;
+    right: 0.5lh !important;
+    left: auto !important;
+    z-index: 2 !important;
+  }
+
+  [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] {
+    position: absolute !important;
+    left: calc(var(--hy-player-width) + var(--hy-gap)) !important;
+    right: auto !important;
+    top: 0 !important;
+    width: var(--hy-sidebar-width) !important;
+    height: min(100%, calc(var(--hy-pre-player-height) + var(--watch-player-height, 60vh) + 49px)) !important;
+    max-height: min(100%, calc(var(--hy-pre-player-height) + var(--watch-player-height, 60vh) + 49px)) !important;
+    padding-top: 0 !important;
+    transform: none !important;
+    z-index: 60 !important;
+  }
+
+  #root [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] > section[class][class] {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    margin-top: 0 !important;
+    transform: none !important;
+  }
+
+  [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] > section > div {
+    min-height: 0 !important;
+  }
+
+  [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] > section > header {
+    position: relative !important;
+    z-index: 4 !important;
+  }
+
+  [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] button[aria-label="Close"] {
+    position: absolute !important;
+    top: 0.5lh !important;
+    right: 0.5lh !important;
+    left: auto !important;
+    z-index: 5 !important;
+    pointer-events: auto !important;
   }
 
   button[aria-label="コメント投稿ボタン"] {
@@ -585,8 +688,8 @@
   }
 
   div[class*="grid-area_"][class*="sidebar"] section {
-    margin-top: 60px !important;
-    height: calc(100% - 60px) !important;
+    margin-top: var(--hy-stat-height) !important;
+    height: calc(100% - var(--hy-stat-height)) !important;
     border: 0 !important;
     box-shadow: none !important;
     min-height: 0 !important;
@@ -607,7 +710,7 @@
   .HarajukuStats {
     position: absolute !important;
     inset: 0 0 auto 0 !important;
-    height: 60px !important;
+    height: var(--hy-stat-height) !important;
     box-sizing: border-box !important;
     font-family: "MS PGothic", "Meiryo", sans-serif !important;
     font-size: 12px !important;
@@ -683,14 +786,45 @@
   }
 
   div[class*="grid-area_"][class*="sidebar"] section > header {
-    height: 25px !important;
-    min-height: 25px !important;
+    height: var(--hy-sidebar-header-height) !important;
+    min-height: var(--hy-sidebar-header-height) !important;
+    position: relative !important;
     background: linear-gradient(#686868, #1f1f1f) !important;
     border: 1px solid #111 !important;
     border-bottom: 0 !important;
     color: #fff !important;
+    overflow: hidden !important;
     text-align: center !important;
     text-shadow: 0 -1px 0 #000 !important;
+  }
+
+  div[class*="grid-area_"][class*="sidebar"] section > header [aria-label*="コメントリスト"][aria-label*="開閉"] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: var(--hy-sidebar-header-height) !important;
+    min-height: var(--hy-sidebar-header-height) !important;
+    padding: 0 !important;
+  }
+
+  div[class*="grid-area_"][class*="sidebar"] section > header [aria-label*="コメントリスト"][aria-label*="開閉"] > svg {
+    position: absolute !important;
+    left: 10px !important;
+    top: 50% !important;
+    flex: 0 0 16px !important;
+    width: 16px !important;
+    min-width: 16px !important;
+    max-width: 16px !important;
+    height: 16px !important;
+    min-height: 16px !important;
+    max-height: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: translateY(-50%) !important;
+  }
+
+  div[class*="grid-area_"][class*="sidebar"] section > header [aria-label*="コメントリスト"][aria-label*="開閉"] h1 {
+    line-height: var(--hy-sidebar-header-height) !important;
   }
 
   div[class*="grid-area_"][class*="sidebar"] section > div {
@@ -827,7 +961,7 @@
     top: 0 !important;
     z-index: 3 !important;
     width: var(--hy-player-width) !important;
-    height: 34px !important;
+    height: var(--hy-title-row-height) !important;
     max-width: var(--hy-player-width) !important;
     box-sizing: border-box !important;
     margin: 0 !important;
@@ -854,10 +988,10 @@
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type {
     position: absolute !important;
     left: 0 !important;
-    top: 38px !important;
+    top: calc(var(--hy-title-row-height) + var(--hy-title-to-detail-gap)) !important;
     z-index: 4 !important;
     width: var(--hy-player-width) !important;
-    min-height: 28px !important;
+    min-height: var(--hy-detail-summary-height) !important;
     max-height: none !important;
     overflow: visible !important;
     display: block !important;
@@ -871,10 +1005,10 @@
     content: "動画の詳細情報";
     position: absolute;
     left: 0;
-    top: 38px;
+    top: calc(var(--hy-title-row-height) + var(--hy-title-to-detail-gap));
     z-index: 3;
     width: var(--hy-player-width);
-    height: 28px;
+    height: var(--hy-detail-summary-height);
     box-sizing: border-box;
     padding: 5px 90px 0 8px;
     border: 1px solid #b6b6b6;
@@ -948,36 +1082,41 @@
 
   div[class*="grid-area_"][class*="bottom"] > section:first-of-type > :not(header)[aria-hidden="false"] {
     display: flex !important;
-    height: 260px !important;
-    min-height: 260px !important;
-    max-height: 260px !important;
+    height: var(--hy-detail-expanded-height) !important;
+    min-height: var(--hy-detail-expanded-height) !important;
+    max-height: var(--hy-detail-expanded-height) !important;
     overflow: auto !important;
   }
 
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type > :not(header)[aria-hidden="false"] {
     display: flex !important;
-    height: 260px !important;
-    min-height: 260px !important;
-    max-height: 260px !important;
+    height: var(--hy-detail-expanded-height) !important;
+    min-height: var(--hy-detail-expanded-height) !important;
+    max-height: var(--hy-detail-expanded-height) !important;
     overflow: auto !important;
   }
 
   section[class*="grid-template-areas"]:has(div[class*="grid-area_"][class*="bottom"] > section:first-of-type > :not(header)[aria-hidden="false"]) {
-    padding-top: 414px !important;
+    padding-top: var(--hy-expanded-pre-player-height) !important;
   }
 
   section[class*="grid-template-areas"]:has(div[class*="grid-area_"][class*="bottom"] > section:first-of-type > :not(header)[aria-hidden="false"]) div[class*="grid-area_"][class*="bottom"] > div:nth-child(2) {
-    top: 334px !important;
+    top: var(--hy-expanded-tags-top) !important;
   }
 
   section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:nth-child(2) {
     position: absolute !important;
     left: 0 !important;
-    top: 70px !important;
+    top: calc(
+      var(--hy-title-row-height) +
+      var(--hy-title-to-detail-gap) +
+      var(--hy-detail-summary-height) +
+      var(--hy-detail-to-tags-gap)
+    ) !important;
     z-index: 2 !important;
     width: var(--hy-player-width) !important;
     min-height: 28px !important;
-    max-height: 64px !important;
+    max-height: var(--hy-tag-strip-max-height) !important;
     overflow: visible !important;
     display: flex !important;
     flex-wrap: wrap !important;
@@ -985,6 +1124,13 @@
     gap: 4px !important;
     padding: 2px 0 !important;
     background: #fff !important;
+  }
+
+  section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:nth-child(2) > div[class*="contentOverlay"] {
+    inset: -1px 0 -15px !important;
+    width: 100% !important;
+    height: auto !important;
+    z-index: 3 !important;
   }
 
   div[class*="grid-area_"][class*="bottom"] section {
@@ -1060,18 +1206,26 @@
 
   html[data-hy-theme="light"],
   :root[data-hy-theme="light"] body,
+  :root[data-hy-theme="light"] #root,
+  :root[data-hy-theme="light"] #root > div,
+  :root[data-hy-theme="light"] [aria-label="nicovideo-content"],
   :root[data-hy-theme="light"] #root main,
   :root[data-hy-theme="light"] body::before {
-    background: transparent !important;
+    background: var(--hy-page) !important;
     color: #222 !important;
+    color-scheme: light !important;
   }
 
   html[data-hy-theme="dark"],
   :root[data-hy-theme="dark"] body,
+  :root[data-hy-theme="dark"] #root,
+  :root[data-hy-theme="dark"] #root > div,
+  :root[data-hy-theme="dark"] [aria-label="nicovideo-content"],
   :root[data-hy-theme="dark"] #root main,
   :root[data-hy-theme="dark"] body::before {
-    background: transparent !important;
+    background: var(--hy-page) !important;
     color: #e8e8e8 !important;
+    color-scheme: dark !important;
   }
 
   :root[data-hy-theme="light"] #root > div > header,
@@ -1413,6 +1567,160 @@
     }
   }
 
+  html[data-hy-theme="light"],
+  :root[data-hy-theme="light"] body,
+  :root[data-hy-theme="light"] #root,
+  :root[data-hy-theme="light"] #root > div,
+  :root[data-hy-theme="light"] [aria-label="nicovideo-content"],
+  :root[data-hy-theme="light"] #root main,
+  :root[data-hy-theme="light"] body::before {
+    background: var(--hy-page) !important;
+    color: #222 !important;
+    color-scheme: light !important;
+  }
+
+  html[data-hy-theme="dark"],
+  :root[data-hy-theme="dark"] body,
+  :root[data-hy-theme="dark"] #root,
+  :root[data-hy-theme="dark"] #root > div,
+  :root[data-hy-theme="dark"] [aria-label="nicovideo-content"],
+  :root[data-hy-theme="dark"] #root main,
+  :root[data-hy-theme="dark"] body::before {
+    background: var(--hy-page) !important;
+    color: #e8e8e8 !important;
+    color-scheme: dark !important;
+  }
+
+  :root[data-hy-theme] section[class*="grid-template-areas"]::after,
+  :root[data-hy-theme] section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:nth-child(2),
+  :root[data-hy-theme] section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type > :not(header),
+  :root[data-hy-theme] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"],
+  :root[data-hy-theme] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] > section[class],
+  :root[data-hy-theme] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] [class*="bg-c_layer"],
+  :root[data-hy-theme] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] [class*="bg_layer"] {
+    background: var(--hy-panel) !important;
+    border-color: var(--hy-border) !important;
+    color: var(--hy-text) !important;
+  }
+
+  :root[data-hy-theme] section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:nth-child(2) > div[class*="contentOverlay"] {
+    background: color-mix(in srgb, var(--hy-panel) 82%, transparent) !important;
+    color: var(--hy-text) !important;
+  }
+
+  :root[data-hy-theme] .PlayerPresenter > div:nth-child(2),
+  :root[data-hy-theme] .PlayerPresenter > div:nth-child(2) div:has(> textarea[placeholder="コメントを入力"]),
+  :root[data-hy-theme] .PlayerPresenter > div:nth-child(2) [class*="bg-c_layer"],
+  :root[data-hy-theme] .PlayerPresenter > div:nth-child(2) [class*="bg_layer"],
+  :root[data-hy-theme] [data-element-area="video_action"],
+  :root[data-hy-theme] button[data-element-area="video_action"] {
+    background: linear-gradient(var(--hy-panel-2), var(--hy-panel)) !important;
+    border-color: var(--hy-border) !important;
+    color: var(--hy-text) !important;
+  }
+
+  :root[data-hy-theme] .PlayerPresenter textarea[placeholder="コメントを入力"],
+  :root[data-hy-theme] .PlayerPresenter input[placeholder="コマンド"] {
+    background: var(--hy-bg) !important;
+    border-color: var(--hy-border) !important;
+    color: var(--hy-text) !important;
+  }
+
+  :root[data-hy-theme] [data-element-area="video_action"] *,
+  :root[data-hy-theme] button[data-element-area="video_action"] *,
+  :root[data-hy-theme] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] *,
+  :root[data-hy-theme] .PlayerPresenter > div:nth-child(2) [class*="bg-c_layer"] *,
+  :root[data-hy-theme] .PlayerPresenter > div:nth-child(2) [class*="bg_layer"] * {
+    color: var(--hy-text) !important;
+    fill: var(--hy-text) !important;
+  }
+
+  :root[data-hy-theme="light"] section[class*="grid-template-areas"]::after,
+  :root[data-hy-theme="light"] section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:nth-child(2),
+  :root[data-hy-theme="light"] section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type > :not(header),
+  :root[data-hy-theme="light"] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"],
+  :root[data-hy-theme="light"] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] > section[class],
+  :root[data-hy-theme="light"] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] [class*="bg-c_layer"],
+  :root[data-hy-theme="light"] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] [class*="bg_layer"] {
+    background: #fff !important;
+    border-color: #999 !important;
+    color: #111 !important;
+  }
+
+  :root[data-hy-theme="light"] .PlayerPresenter > div:nth-child(2),
+  :root[data-hy-theme="light"] .PlayerPresenter > div:nth-child(2) div:has(> textarea[placeholder="コメントを入力"]),
+  :root[data-hy-theme="light"] .PlayerPresenter > div:nth-child(2) [class*="bg-c_layer"],
+  :root[data-hy-theme="light"] .PlayerPresenter > div:nth-child(2) [class*="bg_layer"],
+  :root[data-hy-theme="light"] [data-element-area="video_action"],
+  :root[data-hy-theme="light"] button[data-element-area="video_action"] {
+    background: linear-gradient(#fff, #e1e1e1) !important;
+    border-color: #aaa !important;
+    color: #111 !important;
+  }
+
+  :root[data-hy-theme="light"] .PlayerPresenter textarea[placeholder="コメントを入力"],
+  :root[data-hy-theme="light"] .PlayerPresenter input[placeholder="コマンド"] {
+    background: #fff !important;
+    border-color: #999 !important;
+    color: #111 !important;
+  }
+
+  :root[data-hy-theme="light"] section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:nth-child(2) > div[class*="contentOverlay"] {
+    background: rgba(242, 242, 242, .86) !important;
+    color: #111 !important;
+  }
+
+  :root[data-hy-theme="dark"] section[class*="grid-template-areas"]::after,
+  :root[data-hy-theme="dark"] section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:nth-child(2),
+  :root[data-hy-theme="dark"] section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type > :not(header),
+  :root[data-hy-theme="dark"] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"],
+  :root[data-hy-theme="dark"] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] > section[class],
+  :root[data-hy-theme="dark"] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] [class*="bg-c_layer"],
+  :root[data-hy-theme="dark"] [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"] [class*="bg_layer"] {
+    background: var(--hy-panel) !important;
+    border-color: var(--hy-border) !important;
+    color: var(--hy-text) !important;
+  }
+
+  :root[data-hy-theme="dark"] .PlayerPresenter > div:nth-child(2),
+  :root[data-hy-theme="dark"] .PlayerPresenter > div:nth-child(2) div:has(> textarea[placeholder="コメントを入力"]),
+  :root[data-hy-theme="dark"] .PlayerPresenter > div:nth-child(2) [class*="bg-c_layer"],
+  :root[data-hy-theme="dark"] .PlayerPresenter > div:nth-child(2) [class*="bg_layer"],
+  :root[data-hy-theme="dark"] [data-element-area="video_action"],
+  :root[data-hy-theme="dark"] button[data-element-area="video_action"] {
+    background: linear-gradient(#2b2b2b, #171717) !important;
+    border-color: #666 !important;
+    color: #eee !important;
+  }
+
+  :root[data-hy-theme="dark"] .PlayerPresenter textarea[placeholder="コメントを入力"],
+  :root[data-hy-theme="dark"] .PlayerPresenter input[placeholder="コマンド"] {
+    background: #151515 !important;
+    border-color: #666 !important;
+    color: #eee !important;
+  }
+
+  :root[data-hy-theme="dark"] section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:nth-child(2) > div[class*="contentOverlay"] {
+    background: rgba(32, 32, 32, .88) !important;
+    color: #eee !important;
+  }
+
+  :root[data-hy-theme="light"] #root#root main .PlayerPresenter textarea[placeholder="コメントを入力"],
+  :root[data-hy-theme="light"] #root#root main .PlayerPresenter input[placeholder="コマンド"] {
+    background: #fff !important;
+    background-image: none !important;
+    border-color: #999 !important;
+    color: #111 !important;
+  }
+
+  :root[data-hy-theme="dark"] #root#root main .PlayerPresenter textarea[placeholder="コメントを入力"],
+  :root[data-hy-theme="dark"] #root#root main .PlayerPresenter input[placeholder="コマンド"] {
+    background: #151515 !important;
+    background-image: none !important;
+    border-color: #666 !important;
+    color: #eee !important;
+  }
+
   #root#root main .PlayerPresenter > div:first-child button,
   #root#root main .PlayerPresenter > div:first-child [role="button"] {
     background: transparent !important;
@@ -1520,5 +1828,32 @@
       border-color: #5f5f5f !important;
       color: var(--hy-link) !important;
     }
+  }
+
+  /* Keep official CommonHeader hover menus readable on their light menu-item backgrounds. */
+  #CommonHeader#CommonHeader#CommonHeader .common-header-1usu4l0.common-header-1usu4l0,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-1usu4l0.common-header-1usu4l0 *,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-3ymwy4.common-header-3ymwy4,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-71539i.common-header-71539i,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-71539i.common-header-71539i *,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-1xzs4ko.common-header-1xzs4ko,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-1xzs4ko.common-header-1xzs4ko *,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-n0qa7l.common-header-n0qa7l,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-c1a1qc.common-header-c1a1qc,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-c1a1qc.common-header-c1a1qc *,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-yxm7eu.common-header-yxm7eu,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-yxm7eu.common-header-yxm7eu *,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-sufle8.common-header-sufle8,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-sufle8.common-header-sufle8 * {
+    color: #111 !important;
+    fill: #111 !important;
+    text-shadow: none !important;
+  }
+
+  #CommonHeader#CommonHeader#CommonHeader .common-header-1usu4l0.common-header-1usu4l0:hover,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-71539i.common-header-71539i:hover,
+  #CommonHeader#CommonHeader#CommonHeader .common-header-c1a1qc.common-header-c1a1qc:hover {
+    color: #111 !important;
+    text-decoration: none !important;
   }
 }
