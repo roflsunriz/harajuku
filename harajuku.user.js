@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         niconico Harajuku-ish helpers
 // @namespace    github.com/roflsunriz/harajuku
-// @version      0.1.1
+// @version      0.1.2
 // @description  Adds dynamic Harajuku-ish watch-page metadata and a light/dark theme button.
 // @author       roflsunriz
 // @match        https://www.nicovideo.jp/watch/*
@@ -235,6 +235,7 @@
     const grid = document.querySelector(SELECTORS.grid);
     const title = document.querySelector(SELECTORS.title);
     const sidebar = document.querySelector(SELECTORS.sidebarPanel);
+    const sidebarColumn = sidebar?.parentElement;
     const detailContent = document.querySelector(SELECTORS.detailContent);
 
     if (detailContent?.getAttribute("aria-hidden") === "false") {
@@ -264,11 +265,16 @@
 
     if (title && sidebar) {
       const titleTop = title.getBoundingClientRect().top;
-      const sidebarBottom = sidebar.getBoundingClientRect().bottom;
+      const sidebarBottom =
+        sidebarColumn?.getBoundingClientRect().bottom ?? sidebar.getBoundingClientRect().bottom;
       ROOT.style.setProperty("--hy-watch-sidebar-panel-height", px(sidebarBottom - titleTop));
     }
 
-    observeLayoutTargets([grid, title, sidebar, detailContent]);
+    const sidebarExtraPanels = Array.from(
+      sidebarColumn?.querySelectorAll(':scope > section, :scope > [data-scope="tabs"][data-part="root"]') ?? [],
+    );
+
+    observeLayoutTargets([grid, title, sidebar, sidebarColumn, detailContent, ...sidebarExtraPanels]);
   }
 
   let scheduled = false;
