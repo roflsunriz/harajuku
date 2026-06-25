@@ -184,8 +184,24 @@
     return chrome;
   }
 
+  function findCommentListSection(root = document) {
+    if (!root) return null;
+
+    return (
+      Array.from(root.querySelectorAll("section")).find((section) => {
+        const header = section.querySelector(":scope > header");
+        return header?.textContent?.includes("コメントリスト") ?? false;
+      }) ?? null
+    );
+  }
+
+  function findSidebarPanel() {
+    const commentListSection = findCommentListSection();
+    return commentListSection?.parentElement ?? document.querySelector(SELECTORS.sidebarPanel);
+  }
+
   function ensureChrome() {
-    const sidebar = document.querySelector(SELECTORS.sidebarPanel);
+    const sidebar = findSidebarPanel();
     if (!sidebar) return undefined;
 
     let chrome = sidebar.querySelector(":scope > .HarajukuWatchChrome");
@@ -234,8 +250,9 @@
   function updateLayoutMetrics() {
     const grid = document.querySelector(SELECTORS.grid);
     const title = document.querySelector(SELECTORS.title);
-    const sidebar = document.querySelector(SELECTORS.sidebarPanel);
+    const sidebar = findSidebarPanel();
     const sidebarColumn = sidebar?.parentElement;
+    const commentListSection = findCommentListSection(sidebarColumn);
     const detailContent = document.querySelector(SELECTORS.detailContent);
 
     if (detailContent?.getAttribute("aria-hidden") === "false") {
@@ -265,16 +282,18 @@
 
     if (title && sidebar) {
       const titleTop = title.getBoundingClientRect().top;
-      const sidebarBottom =
-        sidebarColumn?.getBoundingClientRect().bottom ?? sidebar.getBoundingClientRect().bottom;
-      ROOT.style.setProperty("--hy-watch-sidebar-panel-height", px(sidebarBottom - titleTop));
+      const panelBottom =
+        commentListSection?.getBoundingClientRect().bottom ??
+        sidebarColumn?.getBoundingClientRect().bottom ??
+        sidebar.getBoundingClientRect().bottom;
+      ROOT.style.setProperty("--hy-watch-sidebar-panel-height", px(panelBottom - titleTop));
     }
 
     const sidebarExtraPanels = Array.from(
       sidebarColumn?.querySelectorAll(':scope > section, :scope > [data-scope="tabs"][data-part="root"]') ?? [],
     );
 
-    observeLayoutTargets([grid, title, sidebar, sidebarColumn, detailContent, ...sidebarExtraPanels]);
+    observeLayoutTargets([grid, title, sidebar, sidebarColumn, detailContent, commentListSection, ...sidebarExtraPanels]);
   }
 
   let scheduled = false;
