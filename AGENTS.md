@@ -1,4 +1,7 @@
-# Project Notes
+# AGENTS.md
+
+共通ルールは `COMMON-AGENTS.md` を必ず確認し、上位方針として扱う。
+このファイルでは `harajuku` 固有の補足だけを記載する。
 
 ## Purpose
 
@@ -73,16 +76,4 @@ When expanded, the details section must reserve vertical space so tags, player, 
 
 ## Color Theme
 
-The UserCSS still supports OS/browser dark mode through:
-
-```css
-@media (prefers-color-scheme: dark) {
-  ...
-}
-```
-
-The UserScript may also set `data-hy-theme="light"` or `data-hy-theme="dark"` on the root element for the explicit theme button.
-
-## Known Limits
-
-Some visual content such as the title/detail summary may still be represented by CSS pseudo-elements for stability. Dynamic metadata such as views, comments, mylists, and posted date should come from `.HarajukuWatchChrome` rather than hardcoded CSS text or repositioned modern niconico DOM.
+The UserCSS still supports OS/browser dark mode through `prefers-color-scheme`.
