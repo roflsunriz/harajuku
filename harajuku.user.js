@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         niconico Harajuku-ish helpers
 // @namespace    github.com/roflsunriz/harajuku
-// @version      0.1.2
-// @description  Adds dynamic Harajuku-ish watch-page metadata and a light/dark theme button.
+// @version      0.2.0
+// @description  Adds dynamic Harajuku-ish watch-page metadata, owner controls, and a light/dark theme button.
 // @author       roflsunriz
 // @match        https://www.nicovideo.jp/watch/*
 // @run-at       document-idle
@@ -153,6 +153,204 @@
     return result;
   }
 
+  let ownerApiMetadata;
+  let ownerMetadataUrl = "";
+  let ownerMetadataPromise;
+
+  function parseServerResponseMeta(content) {
+    try {
+      return JSON.parse(content);
+    } catch {
+      return JSON.parse(decodeURIComponent(content));
+    }
+  }
+
+  function buildOwnerApiMetadata(apiData) {
+    const owner = apiData?.owner;
+    if (owner?.id != null && owner.nickname && owner.iconUrl) {
+      const profileHref = `/user/${owner.id}`;
+      return {
+        name: owner.nickname,
+        profileHref,
+        videoHref: `${profileHref}/video`,
+        iconSrc: owner.iconUrl,
+      };
+    }
+
+    const channel = apiData?.channel;
+    if (channel?.id != null && channel.name && channel.iconUrl) {
+      const profileHref = channel.url || `/channel/${channel.id}`;
+      return {
+        name: channel.name,
+        profileHref,
+        videoHref: `${profileHref.replace(/\/$/, "")}/video`,
+        iconSrc: channel.iconUrl,
+      };
+    }
+    return undefined;
+  }
+
+  async function refreshOwnerApiMetadata() {
+    const requestedUrl = location.href;
+    if (ownerMetadataPromise && ownerMetadataUrl === requestedUrl) return ownerMetadataPromise;
+    ownerMetadataUrl = requestedUrl;
+    ownerApiMetadata = undefined;
+    ownerMetadataPromise = (async () => {
+      try {
+        const response = await fetch(requestedUrl, { credentials: "include" });
+        if (!response.ok) throw new Error(`watch page fetch failed: ${response.status}`);
+        const html = await response.text();
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const content = doc.querySelector('meta[name="server-response"]')?.getAttribute("content");
+        if (!content) throw new Error("server-response meta was not found");
+        const apiData = parseServerResponseMeta(content)?.data?.response;
+        if (location.href !== requestedUrl) return;
+        ownerApiMetadata = buildOwnerApiMetadata(apiData);
+      } catch (error) {
+        console.warn("[Harajuku] 投稿者情報の取得に失敗しました", error);
+      } finally {
+        ownerMetadataPromise = undefined;
+        scheduleRender();
+      }
+    })();
+    return ownerMetadataPromise;
+  }
+
+  function readOwnerApiMetadata() {
+    if (ownerMetadataUrl !== location.href && !ownerMetadataPromise) void refreshOwnerApiMetadata();
+    return ownerApiMetadata;
+  }
+
+  function cloneActionIcon(source, fallback) {
+    const icon = source?.querySelector("svg")?.cloneNode(true);
+    if (icon instanceof Element) {
+      icon.removeAttribute("class");
+      icon.setAttribute("aria-hidden", "true");
+      return icon;
+    }
+    const span = document.createElement("span");
+    span.setAttribute("aria-hidden", "true");
+    span.textContent = fallback;
+    return span;
+  }
+
+  function createOwnerActionButton(className, label, source, fallback) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = className;
+    button.setAttribute("aria-label", label);
+    button.disabled = !source;
+    button.append(cloneActionIcon(source, fallback));
+    button.addEventListener("click", () => source?.click());
+    return button;
+  }
+
+  function waitForElement(selector, timeoutMs = 1500) {
+    const existing = document.querySelector(selector);
+    if (existing) return Promise.resolve(existing);
+    return new Promise((resolve) => {
+      const observer = new MutationObserver(() => {
+        const element = document.querySelector(selector);
+        if (!element) return;
+        observer.disconnect();
+        clearTimeout(timer);
+        resolve(element);
+      });
+      const timer = setTimeout(() => {
+        observer.disconnect();
+        resolve(null);
+      }, timeoutMs);
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
+  }
+
+  async function openOfficialOwnerMuteDialog() {
+    const detailContent = document.querySelector(SELECTORS.detailContent);
+    const wasCollapsed = detailContent?.getAttribute("aria-hidden") !== "false";
+    const detailToggle = document.querySelector(`${SELECTORS.bottom} > section:first-of-type > header > :first-child`);
+    if (wasCollapsed) detailToggle?.click();
+    const menuTrigger = await waitForElement(`${SELECTORS.detailContent} button[data-scope="menu"][data-part="trigger"]`);
+    if (!menuTrigger) return;
+    menuTrigger.click();
+    const muteAction = await waitForElement('[data-scope="menu"][data-part="item"][data-value="mute"] button');
+    muteAction?.click();
+    if (wasCollapsed && muteAction) setTimeout(() => detailToggle?.click(), 100);
+  }
+
+  function createOwnerMenu(source) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "HarajukuOwner-menuWrapper";
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "HarajukuOwner-action HarajukuOwner-menu";
+    trigger.setAttribute("aria-label", "その他の操作");
+    trigger.setAttribute("aria-haspopup", "menu");
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.append(cloneActionIcon(source, "…"));
+    const menu = document.createElement("div");
+    menu.className = "HarajukuOwner-menuPopup";
+    menu.setAttribute("role", "menu");
+    menu.hidden = true;
+    const mute = document.createElement("button");
+    mute.type = "button";
+    mute.className = "HarajukuOwner-menuItem";
+    mute.setAttribute("role", "menuitem");
+    mute.textContent = "このユーザーの動画を非表示";
+    mute.addEventListener("click", () => {
+      menu.hidden = true;
+      trigger.setAttribute("aria-expanded", "false");
+      void openOfficialOwnerMuteDialog();
+    });
+    trigger.addEventListener("click", () => {
+      const open = menu.hidden;
+      menu.hidden = !open;
+      trigger.setAttribute("aria-expanded", String(open));
+    });
+    menu.append(mute);
+    wrapper.append(trigger, menu);
+    return wrapper;
+  }
+
+  function createOwnerPanel(owner) {
+    const panel = document.createElement("div");
+    panel.className = "HarajukuOwner";
+    const iconLink = document.createElement("a");
+    iconLink.className = "HarajukuOwner-iconLink";
+    iconLink.href = owner.profileHref;
+    iconLink.setAttribute("aria-label", owner.name);
+    const icon = document.createElement("img");
+    icon.className = "HarajukuOwner-icon";
+    icon.src = owner.iconSrc;
+    icon.alt = owner.name;
+    icon.loading = "lazy";
+    iconLink.append(icon);
+    const body = document.createElement("div");
+    body.className = "HarajukuOwner-body";
+    const name = document.createElement("a");
+    name.className = "HarajukuOwner-name";
+    name.href = owner.profileHref;
+    name.textContent = owner.name;
+    const videos = document.createElement("a");
+    videos.className = "HarajukuOwner-videos";
+    videos.href = owner.videoHref;
+    videos.textContent = "投稿動画";
+    body.append(name, videos);
+    const follow = document.querySelector('[data-element-name="follow_user"]');
+    const supportSource = document.querySelector('a[data-element-name="creator_support"]');
+    const menuSource = document.querySelector(`${SELECTORS.detailContent} button[data-scope="menu"][data-part="trigger"]`);
+    const actions = document.createElement("div");
+    actions.className = "HarajukuOwner-actions";
+    actions.append(createOwnerActionButton("HarajukuOwner-action HarajukuOwner-follow", "フォロー", follow, "☆"));
+    const support = document.createElement("a");
+    support.className = "HarajukuOwner-action HarajukuOwner-support";
+    support.href = supportSource?.href || `https://creator-support.nicovideo.jp/registration/${owner.profileHref.split("/").pop()}?ref=pc_video_watch`;
+    support.setAttribute("aria-label", "サポーター登録");
+    support.append(cloneActionIcon(supportSource, "♡"));
+    actions.append(support, createOwnerMenu(menuSource));
+    panel.append(iconLink, body, actions);
+    return panel;
+  }
+
   function makeStatItem(label, key) {
     const node = document.createElement("div");
     node.className = key === "postedAt" ? "HarajukuStats-date" : "HarajukuStats-row";
@@ -221,14 +419,18 @@
     if (!chrome) return false;
 
     const values = currentMeta();
-    const signature = META_ITEMS.map((item) => values[item.source] || "-").join("\n");
-    if (chrome.dataset.hySignature === signature) return true;
+    const owner = readOwnerApiMetadata();
+    const signature = [...META_ITEMS.map((item) => values[item.source] || "-"), owner?.name || "-", owner?.profileHref || "-"].join("\n");
+    if (chrome.dataset.hySignature === signature && (!owner || document.querySelector(".HarajukuOwner"))) return true;
     chrome.dataset.hySignature = signature;
 
     for (const item of META_ITEMS) {
       const value = chrome.querySelector(`.HarajukuStats [data-hy-key="${item.key}"] .HarajukuStats-value`);
       if (value) value.textContent = values[item.source] || "-";
     }
+
+    document.querySelectorAll(".HarajukuOwner").forEach((node) => node.remove());
+    if (owner) document.querySelector(SELECTORS.bottom)?.append(createOwnerPanel(owner));
 
     return true;
   }
@@ -308,6 +510,7 @@
 
   function start() {
     setTheme(getTheme());
+    void refreshOwnerApiMetadata();
     scheduleRender();
 
     let retryCount = 0;
