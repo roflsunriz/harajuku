@@ -73,16 +73,15 @@ Avoid relying on hashed or generated classes when a stable attribute exists. Som
 - Tags may wrap to multiple lines instead of being ellipsized.
 - Ad-like decorative elements should not be added unless explicitly requested.
 
-## Detail Accordion
+## Video Description Panel
 
-The details panel uses the existing modern niconico accordion state.
+The UserScript reads `server-response.data.response.video.description`, sanitizes it with an allow-list DOM rebuild, and renders it in `.HarajukuDescription`.
 
-The CSS should key off:
-
-- `aria-hidden="false"` for expanded details.
-- `aria-hidden="true"` or `display: none` for collapsed details.
-
-When expanded, the details section must reserve vertical space so tags, player, and comments move down instead of being overlapped.
+- Do not expose the modern niconico details accordion as the description UI.
+- Empty and short descriptions stay close to the minimum height.
+- Longer descriptions grow with their content up to the responsive maximum height.
+- Only content beyond the maximum height scrolls inside the description panel.
+- The measured description height must reserve vertical space so tags, player, and comments never overlap it.
 
 ## Color Theme
 

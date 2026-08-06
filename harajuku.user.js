@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         niconico Harajuku-ish helpers
 // @namespace    github.com/roflsunriz/harajuku
-// @version      0.2.0
-// @description  Adds dynamic Harajuku-ish watch-page metadata, owner controls, and a light/dark theme button.
+// @version      0.3.0
+// @description  Adds dynamic Harajuku-ish watch metadata, a responsive video description, owner controls, and a theme button.
 // @author       roflsunriz
 // @match        https://www.nicovideo.jp/watch/*
 // @run-at       document-idle
@@ -20,7 +20,8 @@
     grid: 'section[class*="grid-template-areas"]',
     bottom: 'section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"]',
     detailList: 'section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type dl',
-    detailContent: 'section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type > :not(header)',
+    detailSection: 'section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type',
+    detailContent: 'section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > section:first-of-type > :not(header):not(.HarajukuDescription)',
     title: 'section[class*="grid-template-areas"] > div[class*="grid-area_"][class*="bottom"] > div:first-child h1',
     header: "#root > div > header",
   };
@@ -154,8 +155,10 @@
   }
 
   let ownerApiMetadata;
-  let ownerMetadataUrl = "";
-  let ownerMetadataPromise;
+  let descriptionHtml;
+  let renderedDescriptionHtml;
+  let watchMetadataUrl = "";
+  let watchMetadataPromise;
 
   function parseServerResponseMeta(content) {
     try {
@@ -190,12 +193,14 @@
     return undefined;
   }
 
-  async function refreshOwnerApiMetadata() {
+  async function refreshWatchApiMetadata() {
     const requestedUrl = location.href;
-    if (ownerMetadataPromise && ownerMetadataUrl === requestedUrl) return ownerMetadataPromise;
-    ownerMetadataUrl = requestedUrl;
+    if (watchMetadataPromise && watchMetadataUrl === requestedUrl) return watchMetadataPromise;
+    watchMetadataUrl = requestedUrl;
     ownerApiMetadata = undefined;
-    ownerMetadataPromise = (async () => {
+    descriptionHtml = undefined;
+    renderedDescriptionHtml = undefined;
+    watchMetadataPromise = (async () => {
       try {
         const response = await fetch(requestedUrl, { credentials: "include" });
         if (!response.ok) throw new Error(`watch page fetch failed: ${response.status}`);
@@ -206,19 +211,120 @@
         const apiData = parseServerResponseMeta(content)?.data?.response;
         if (location.href !== requestedUrl) return;
         ownerApiMetadata = buildOwnerApiMetadata(apiData);
+        descriptionHtml = typeof apiData?.video?.description === "string" ? apiData.video.description : "";
       } catch (error) {
-        console.warn("[Harajuku] 投稿者情報の取得に失敗しました", error);
+        descriptionHtml = null;
+        console.warn("[Harajuku] watch動画情報の取得に失敗しました", error);
       } finally {
-        ownerMetadataPromise = undefined;
+        watchMetadataPromise = undefined;
         scheduleRender();
       }
     })();
-    return ownerMetadataPromise;
+    return watchMetadataPromise;
   }
 
   function readOwnerApiMetadata() {
-    if (ownerMetadataUrl !== location.href && !ownerMetadataPromise) void refreshOwnerApiMetadata();
+    if (watchMetadataUrl !== location.href && !watchMetadataPromise) void refreshWatchApiMetadata();
     return ownerApiMetadata;
+  }
+
+  const ALLOWED_DESCRIPTION_TAGS = new Set([
+    "a",
+    "b",
+    "blockquote",
+    "br",
+    "code",
+    "del",
+    "em",
+    "hr",
+    "i",
+    "li",
+    "ol",
+    "p",
+    "pre",
+    "s",
+    "span",
+    "strong",
+    "sub",
+    "sup",
+    "u",
+    "ul",
+    "wbr",
+  ]);
+  const BLOCKED_DESCRIPTION_TAGS = new Set([
+    "button",
+    "embed",
+    "form",
+    "iframe",
+    "input",
+    "noscript",
+    "object",
+    "script",
+    "select",
+    "style",
+    "template",
+    "textarea",
+  ]);
+
+  function safeDescriptionHref(value) {
+    try {
+      const url = new URL(value, location.href);
+      return ["http:", "https:", "mailto:", "tel:"].includes(url.protocol) ? url.href : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function appendSafeDescriptionChildren(source, target) {
+    for (const child of Array.from(source.childNodes)) {
+      if (child.nodeType === Node.TEXT_NODE) {
+        target.appendChild(document.createTextNode(child.textContent || ""));
+        continue;
+      }
+      if (!(child instanceof Element)) continue;
+
+      const tag = child.localName.toLowerCase();
+      if (BLOCKED_DESCRIPTION_TAGS.has(tag)) continue;
+      if (!ALLOWED_DESCRIPTION_TAGS.has(tag)) {
+        appendSafeDescriptionChildren(child, target);
+        continue;
+      }
+
+      const element = document.createElement(tag);
+      if (tag === "a") {
+        const safeUrl = safeDescriptionHref(child.getAttribute("href") || "");
+        if (safeUrl) {
+          element.href = safeUrl;
+          element.target = "_blank";
+          element.rel = "noopener noreferrer";
+        }
+      }
+      const title = child.getAttribute("title");
+      if (title) element.title = title;
+      appendSafeDescriptionChildren(child, element);
+      target.appendChild(element);
+    }
+  }
+
+  function renderDescription(container, html) {
+    if (html === undefined) {
+      container.replaceChildren("動画説明文を取得中…");
+      return "loading";
+    }
+    if (html === null) {
+      container.replaceChildren("動画説明文を取得できませんでした。再読み込みしてください。");
+      return "error";
+    }
+
+    const parsed = new DOMParser().parseFromString(html, "text/html");
+    const fragment = document.createDocumentFragment();
+    appendSafeDescriptionChildren(parsed.body, fragment);
+    container.replaceChildren(fragment);
+    if (!container.textContent?.trim() && !container.querySelector("hr")) {
+      container.replaceChildren("説明文はありません");
+      return "empty";
+    }
+    return "ready";
   }
 
   function cloneActionIcon(source, fallback) {
@@ -382,6 +488,28 @@
     return chrome;
   }
 
+  function ensureDescription() {
+    const section = document.querySelector(SELECTORS.detailSection);
+    if (!section) return null;
+
+    let description = section.querySelector(":scope > .HarajukuDescription");
+    if (!description) {
+      description = document.createElement("div");
+      description.className = "HarajukuDescription";
+      description.setAttribute("role", "region");
+      description.setAttribute("aria-label", "動画説明文");
+      description.tabIndex = 0;
+      section.prepend(description);
+      renderedDescriptionHtml = Symbol("unrendered");
+    }
+
+    if (renderedDescriptionHtml !== descriptionHtml) {
+      description.dataset.hyState = renderDescription(description, descriptionHtml);
+      renderedDescriptionHtml = descriptionHtml;
+    }
+    return description;
+  }
+
   function findCommentListSection(root = document) {
     if (!root) return null;
 
@@ -413,10 +541,11 @@
   }
 
   function renderChrome() {
+    const description = ensureDescription();
     updateLayoutMetrics();
 
     const chrome = ensureChrome();
-    if (!chrome) return false;
+    if (!chrome || !description) return false;
 
     const values = currentMeta();
     const owner = readOwnerApiMetadata();
@@ -456,31 +585,8 @@
     const sidebarColumn = sidebar?.parentElement;
     const commentListSection = findCommentListSection(sidebarColumn);
     const detailContent = document.querySelector(SELECTORS.detailContent);
-
-    if (detailContent?.getAttribute("aria-hidden") === "false") {
-      const previousHeight = detailContent.style.height;
-      const previousMinHeight = detailContent.style.minHeight;
-      const previousMaxHeight = detailContent.style.maxHeight;
-      const previousHeightPriority = detailContent.style.getPropertyPriority("height");
-      const previousMinHeightPriority = detailContent.style.getPropertyPriority("min-height");
-      const previousMaxHeightPriority = detailContent.style.getPropertyPriority("max-height");
-      detailContent.style.setProperty("height", "auto", "important");
-      detailContent.style.setProperty("min-height", "0", "important");
-      detailContent.style.setProperty("max-height", "none", "important");
-
-      const detailRect = detailContent.getBoundingClientRect();
-      const borderHeight = detailRect.height - detailContent.clientHeight;
-      const nextDetailHeight = Math.max(
-        detailContent.scrollHeight + Math.max(0, borderHeight),
-        detailRect.height,
-      );
-
-      detailContent.style.setProperty("height", previousHeight, previousHeightPriority);
-      detailContent.style.setProperty("min-height", previousMinHeight, previousMinHeightPriority);
-      detailContent.style.setProperty("max-height", previousMaxHeight, previousMaxHeightPriority);
-
-      ROOT.style.setProperty("--hy-detail-expanded-height", px(nextDetailHeight));
-    }
+    const description = document.querySelector(".HarajukuDescription");
+    if (description) ROOT.style.setProperty("--hy-description-height", px(description.getBoundingClientRect().height));
 
     if (title && sidebar) {
       const titleTop = title.getBoundingClientRect().top;
@@ -495,7 +601,16 @@
       sidebarColumn?.querySelectorAll(':scope > section, :scope > [data-scope="tabs"][data-part="root"]') ?? [],
     );
 
-    observeLayoutTargets([grid, title, sidebar, sidebarColumn, detailContent, commentListSection, ...sidebarExtraPanels]);
+    observeLayoutTargets([
+      grid,
+      title,
+      sidebar,
+      sidebarColumn,
+      detailContent,
+      description,
+      commentListSection,
+      ...sidebarExtraPanels,
+    ]);
   }
 
   let scheduled = false;
@@ -510,7 +625,7 @@
 
   function start() {
     setTheme(getTheme());
-    void refreshOwnerApiMetadata();
+    void refreshWatchApiMetadata();
     scheduleRender();
 
     let retryCount = 0;
