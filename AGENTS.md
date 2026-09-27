@@ -86,3 +86,7 @@ The UserScript reads `server-response.data.response.video.description`, sanitize
 ## Color Theme
 
 The UserCSS still supports OS/browser dark mode through `prefers-color-scheme`.
+
+## Watch Floating Panels (2026-09-27)
+
+The official gift, player settings, NG settings, tag edit, and mylist dialogs receive inline `left` and `top` values from Watch JavaScript during scrolling. Keep the shared panel rule viewport fixed and override those inline coordinates only for these dialogs. Clamp the height to the viewport so the official internal scroller remains usable. The matching filter-matome implementation and CDP observations are recorded in `verification.md`.

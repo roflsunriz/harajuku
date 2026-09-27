@@ -15,7 +15,7 @@ CSS 側でも `https://www.nicovideo.jp/watch/` に限定しているため、�
 ## Stylus + UserScript で使う
 
 CSSだけでは別DOMの値をコピーできないため、[harajuku.user.js](./harajuku.user.js) が `.HarajukuWatchChrome` を作り、再生数・コメント数・マイリスト数・投稿日時の右上表示と light/dark テーマボタンをそこへ集約します。右上の投稿者情報と動画説明文は現在のwatchページをUserScript自身が取得し、`server-response.data.response`から再構築するため、`NicoCache_nl.watch.apiData`には依存しません。
-動画説明文は安全な専用DOMへ描画し、公式の詳細アコーディオンを表示しません。説明が空または短い場合は22pxを基準にコンパクトに収まり、内容量に応じて`clamp(96px, 18vh, 220px)`まで自動で伸び、それを超えた本文だけが内部スクロールになります。NG設定・タグ編集・動画プレーヤー設定・ギフト・マイリスト追加パネルの高さもUserScriptが実測し、CSS変数へ反映してサイドバーの見えている下端に揃えます。
+動画説明文は安全な専用DOMへ描画し、公式の詳細アコーディオンを表示しません。説明が空または短い場合は22pxを基準にコンパクトに収まり、内容量に応じて`clamp(96px, 18vh, 220px)`まで自動で伸び、それを超えた本文だけが内部スクロールになります。NG設定・タグ編集・動画プレーヤー設定・ギフト・マイリスト追加の共通パネルは画面右側へ固定し、ページをスクロールしても画面内に残ります。長い内容はパネル内でスクロールできます。
 タグ検索おすすめ欄と通常おすすめ欄はサイドバー内でビューポート連動の高さを持つスクロール領域として表示します。ヘッダー検索ボタンは`inline-flex`で虫めがねアイコンを中央揃えします。
 
 ### Firefox
@@ -45,6 +45,8 @@ CSSだけでは別DOMの値をコピーできないため、[harajuku.user.js](.
 `harajuku.user.css` には `@-moz-document url-prefix("https://www.nicovideo.jp/watch/")` が含まれています。Stylus ではそのまま貼り付けられます。
 
 light/dark テーマボタンを使う場合は、ボタンの選択が最優先です。OS やブラウザのライト/ダーク設定より、UserScript が `<html>` に設定する `data-hy-theme="light"` / `data-hy-theme="dark"` が優先されます。
+
+不具合の報告と変更の提案は[サポート](SUPPORT.md)と[貢献方法](CONTRIBUTING.md)を参照してください。セキュリティ上の問題は[セキュリティ報告](SECURITY.md)へ、利用条件は[MITライセンス](LICENSE)へ記載しています。
 
 ## Firefox DevTools RDP で確認する
 

@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           niconico Harajuku-ish
 @namespace      github.com/roflsunriz/harajuku
-@version        0.3.33
+@version        0.3.34
 @description    Modern nicovideo watch page styled toward the Harajuku-era niconico look.
 @author         roflsunriz
 @match          https://www.nicovideo.jp/watch/*
@@ -522,13 +522,13 @@
   [aria-label="タグ編集"][class*="z_docked"][class*="w_watchSidebar"],
   [aria-label="ギフト"][class*="z_docked"][class*="w_watchSidebar"],
   [aria-label="マイリストに追加"][class*="z_docked"][class*="w_watchSidebar"] {
-    position: absolute !important;
-    left: calc(var(--hy-player-width) + var(--hy-gap)) !important;
-    right: auto !important;
-    top: 0 !important;
-    width: var(--hy-sidebar-width) !important;
-    height: var(--hy-watch-sidebar-panel-height) !important;
-    max-height: var(--hy-watch-sidebar-panel-height) !important;
+    position: fixed !important;
+    left: auto !important;
+    right: max(8px, calc((100vw - var(--hy-width)) / 2)) !important;
+    top: 48px !important;
+    width: min(var(--hy-sidebar-width), calc(100vw - 16px)) !important;
+    height: min(var(--hy-watch-sidebar-panel-height), calc(100dvh - 56px)) !important;
+    max-height: min(var(--hy-watch-sidebar-panel-height), calc(100dvh - 56px)) !important;
     padding-top: 0 !important;
     transform: none !important;
     z-index: 60 !important;
