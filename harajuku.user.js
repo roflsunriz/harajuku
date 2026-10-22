@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         niconico Harajuku-ish helpers
 // @namespace    github.com/roflsunriz/harajuku
-// @version      0.3.0
+// @version      0.3.1
 // @description  Adds dynamic Harajuku-ish watch metadata, a responsive video description, owner controls, and a theme button.
 // @author       roflsunriz
 // @match        https://www.nicovideo.jp/watch/*
@@ -170,10 +170,11 @@
 
   function buildOwnerApiMetadata(apiData) {
     const owner = apiData?.owner;
-    if (owner?.id != null && owner.nickname && owner.iconUrl) {
+    const ownerName = owner?.name || owner?.nickname;
+    if (owner?.id != null && ownerName && owner.iconUrl) {
       const profileHref = `/user/${owner.id}`;
       return {
-        name: owner.nickname,
+        name: ownerName,
         profileHref,
         videoHref: `${profileHref}/video`,
         iconSrc: owner.iconUrl,

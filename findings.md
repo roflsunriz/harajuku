@@ -5,3 +5,4 @@
 - 公式dialogはscroll時にinline `left/top` を再設定する。対象dialogだけviewport固定で座標を上書きし、高さをviewportへclampして公式の内部scrollerを残す。
 - RDP/CDPのCSS注入はreloadで消える一時検証で、Stylusの恒久導入とは別。実利用Firefoxを無断終了・変更せず、隔離profileでlight/dark、scroll、複数viewportを確認する。
 - CSSだけで旧HTML構造や機能buttonを再現しようとしない。既存state属性とhover/focus/activeで足りない動作はUserScript側へ置く。
+- Watch APIのユーザー投稿者名は現行`owner.name`を正本とし、旧`owner.nickname`を互換として残す。`channel.name`との分岐、ID・icon URLの必須条件を同時に検証する。
