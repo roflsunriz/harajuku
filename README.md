@@ -16,7 +16,7 @@ CSS 側でも `https://www.nicovideo.jp/watch/` に限定しているため、�
 
 CSSだけでは別DOMの値をコピーできません。[harajuku.user.js](./harajuku.user.js) が `.HarajukuWatchChrome` を作り、再生数・コメント数・マイリスト数・投稿日時と light/dark テーマボタンを右上にまとめます。
 
-UserScriptは現在のwatchページを取得し、`server-response.data.response`から投稿者情報と動画説明文を再構築します。`NicoCache_nl.watch.apiData`には依存しません。
+UserScriptは現在のwatchページを取得し、現行`server-response.data.response.$watchV4.data`の`video.description`と`metadata.jsonLd.owner`から動画説明文・投稿者情報を再構築します。旧Watch応答も互換として扱い、`NicoCache_nl.watch.apiData`には依存しません。
 動画説明文は安全な専用DOMへ描画し、公式の詳細アコーディオンを表示しません。説明が空または短い場合は22pxを基準にコンパクトに収まり、内容量に応じて`clamp(96px, 18vh, 220px)`まで自動で伸び、それを超えた本文だけが内部スクロールになります。
 
 NG設定・タグ編集・動画プレーヤー設定・ギフト・マイリスト追加の共通パネルは画面右側へ固定し、ページをスクロールしても画面内に残ります。長い内容はパネル内でスクロールできます。

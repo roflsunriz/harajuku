@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         niconico Harajuku-ish helpers
 // @namespace    github.com/roflsunriz/harajuku
-// @version      0.3.1
+// @version      0.3.2
 // @description  Adds dynamic Harajuku-ish watch metadata, a responsive video description, owner controls, and a theme button.
 // @author       roflsunriz
 // @match        https://www.nicovideo.jp/watch/*
@@ -194,6 +194,44 @@
     return undefined;
   }
 
+  function readVideoDescription(apiData) {
+    const description = apiData?.video?.description;
+    if (typeof description === "string" && description.trim()) {
+      return description;
+    }
+    return typeof apiData?.video?.shortDescription === "string"
+      ? apiData.video.shortDescription
+      : "";
+  }
+
+  function normalizeWatchResponse(response) {
+    const watchV4 = response?.$watchV4?.data;
+    if (!watchV4) return response;
+    const rawOwner = watchV4.metadata?.jsonLd?.owner;
+    const ownerId = rawOwner?.id;
+    const ownerIdText =
+      typeof ownerId === "string"
+        ? ownerId
+        : typeof ownerId === "number"
+          ? String(ownerId)
+          : "";
+    const isChannel =
+      rawOwner?.type === "channel" || ownerIdText.startsWith("ch");
+    const account = rawOwner
+      ? {
+          id: rawOwner.id,
+          name: rawOwner.name,
+          iconUrl: rawOwner.iconUrl,
+        }
+      : undefined;
+    return {
+      ...watchV4,
+      owner: !isChannel ? account : undefined,
+      channel: isChannel ? account : undefined,
+      tag: watchV4.tag || watchV4.tags,
+    };
+  }
+
   async function refreshWatchApiMetadata() {
     const requestedUrl = location.href;
     if (watchMetadataPromise && watchMetadataUrl === requestedUrl) return watchMetadataPromise;
@@ -209,10 +247,12 @@
         const doc = new DOMParser().parseFromString(html, "text/html");
         const content = doc.querySelector('meta[name="server-response"]')?.getAttribute("content");
         if (!content) throw new Error("server-response meta was not found");
-        const apiData = parseServerResponseMeta(content)?.data?.response;
+        const apiData = normalizeWatchResponse(
+          parseServerResponseMeta(content)?.data?.response,
+        );
         if (location.href !== requestedUrl) return;
         ownerApiMetadata = buildOwnerApiMetadata(apiData);
-        descriptionHtml = typeof apiData?.video?.description === "string" ? apiData.video.description : "";
+        descriptionHtml = readVideoDescription(apiData);
       } catch (error) {
         descriptionHtml = null;
         console.warn("[Harajuku] watch動画情報の取得に失敗しました", error);

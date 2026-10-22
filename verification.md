@@ -2,9 +2,13 @@
 
 ## Watch API投稿者名の変更追従（2026-10-22）
 
-ユーザー投稿者名の現行形`owner.name`を優先し、旧形`owner.nickname`を互換として残した。ユーザーIDとアイコンURLがそろう場合だけ投稿者欄を生成し、既存の`channel.name`分岐は維持する。`harajuku.user.js`の版番号は0.3.1へ更新した。
+2026-10-22保存の実Watchページソースで、`server-response.data.response`直下が`$watchV4`と`pcweb`へ変わり、動画説明文が`$watchV4.data.video.description`、投稿者が`$watchV4.data.metadata.jsonLd.owner`にあることを、値を出力せずキー・型・文字列長で確認した。UserScriptはこのV4データを旧内部形式へ正規化し、`owner.type`でユーザー・チャンネルを分岐する。旧Watch形式も互換として残し、`harajuku.user.js`の版番号は0.3.2へ更新した。
 
-`node --check harajuku.user.js`で構文を確認した。現行形、旧形、チャンネル形、必須値欠損の変換結果は、同じ変換規則を共有するfilter-matome側のBun単体テスト4件とChromium lifecycleテスト4件で確認した。ブラウザー安全ポリシーによりニコニコ動画の実ページは今回直接確認できていないため、UserScript管理拡張へ0.3.1を導入した実利用経路は未検証として残る。再開時は`how-to-update.md`に従い、ユーザー投稿動画とチャンネル投稿動画の両方で投稿者欄を確認する。
+同じ実`server-response`全体を`harajuku.user.js`から抽出した正規化・投稿者・説明文関数へ入力し、説明文77文字、投稿者名9文字、プロフィールリンク文字列、アイコンありになることを値非表示で確認した。
+
+添付の描画後DOMへ実`server-response`を戻して`harajuku.user.js` 0.3.2本体を起動し、投稿者欄1件、投稿者名9文字、プロフィールリンクとアイコンあり、説明欄1件・ready・本文65文字、Harajuku chrome 1件を確認した。
+
+`node --check harajuku.user.js`で構文を確認し、実測V4形、旧形、チャンネル形、必須値欠損を補助テストで確認した。同じ変換規則を共有するfilter-matome側は単体276件、Chromium E2E 92件、39ファイルのビルドが合格した。添付ZIPの修正前DOMではHarajuku説明欄がempty、投稿者欄が0件で公式投稿者リンクだけが残る状態を確認し、上記の修正版製品経路で復旧した。UserScript管理拡張へ0.3.2を導入した実利用経路とチャンネル投稿動画は未検証として残るため、更新後は`how-to-update.md`に従って確認する。
 
 ## 共通パネルの画面固定（2026-09-27）
 
